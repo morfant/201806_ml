@@ -210,6 +210,24 @@ Pdef(\seq2,
 Pdef(\seq3,
 	Pbind(
 		\instrument, \ddd,
+		\freq, Pseq(([66, 73, 73, 73, 73]+7).midicps, inf),
+		\toneLow, 4,
+		\toneGain, 0.2,
+		\atk, 0.1,
+		\dur, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 4]*2, inf),
+		// \dur, 2,
+		\delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 3], inf), // 박이 끝나는 부분이 일치
+		\delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5], inf), // 박이 끝나는 부분이 불일치, 페이즈 음악, 돌림노래 같은 느낌
+		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2]*0.2, inf),
+		// \amp, 0.9
+	)
+).quant_(6).play;
+
+
+/* 빰빠라밤 인데 끝나는 부분에 다음 루틴과 연결하는 음이 있는 패턴
+Pdef(\seq4,
+	Pbind(
+		\instrument, \ddd,
 		\freq, Pseq(([66, 73, 73, 73, 73, 75, 73]+7).midicps, inf),
 		\toneLow, 4,
 		\toneGain, 0.2,
@@ -219,9 +237,11 @@ Pdef(\seq3,
 		\dur, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 4, 1, 0.5]*2, inf),
 		// \dur, 2,
 		\delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5, 1.0, 0.5], inf),
-		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2, 1.0, 0.6]*0.7, inf),
-		// \amp, 0.9
+		// \amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2, 1.0, 0.6]*0.7, inf),
+		\amp, 0.0
 	)
 ).quant_(6).play;
+*/
+
 
 )
