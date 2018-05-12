@@ -16,23 +16,24 @@ SynthDef(\sine, {|freq = 240, dur = 0.2, gate = 1, atk = 0.1, amp = 0.5|
 	var sig = SinOsc.ar(freq, 0, env);
 	var sig2 = SinOsc.kr(freq/4, mul: env);
 	var no = WhiteNoise.ar(env) * 0.005 * LFTri.kr(80, mul: 0.4);
-	Out.ar(0, Pan2.ar(sig*sig2+no), amp);
+	Out.ar(0, Pan2.ar(sig*sig2+no)*amp);
 }).add;
 )
 
 
 (
-SynthDef(\ddd, {|freq = 240, dur = 0.2, gate = 1, atk = 0.1|
-	var env = Line.kr(0.0, 1, dur, doneAction:2);
-	var sig = SinOsc.kr(freq, pi, env);
-	var sig2 = SinOsc.ar(freq/4 * sig , mul: env);
-	var no = WhiteNoise.ar(env) * 0.005 * LFTri.kr(80, mul: 0.4);
-	Out.ar(0, Pan2.ar(sig2+no));
+SynthDef(\ddd, {|freq = 240, dur = 0.2, gate = 1, atk = 0.1, amp = 0.5, toneLow = 7, toneGain = 0.3|
+	var env = EnvGen.kr(Env.perc(atk, dur), gate, doneAction: 2);
+	var sig2 = SinOsc.kr(freq/toneLow, mul: toneGain);
+	var sig = SinOsc.ar(freq*sig2, pi/6);
+	var no = WhiteNoise.ar(0.005) * LFTri.kr(80, mul: 0.4);
+	Out.ar(0, Pan2.ar((sig+no)*env)*amp);
 }).add;
 )
 
 
 a = Synth(\ddd, [\dur, 2.0]);
+a = Synth(\sine, [\dur, 2.0]);
 
 
 
@@ -41,6 +42,8 @@ Synth(\gobeat);
 Synth(\gobeat, [freq: 660, dur: 2.0, amp:0.1]);
 Synth(\gobeat, [freq: 69.midicps, dur: 2.0]);
 
+
+Synth(\ddd);
 
 
 //change tempo
@@ -121,16 +124,17 @@ Pdef(\seq1,
 
 (// 고대 비트
 var amp_a = 0.1;
-var amp_b = 0.1;
-var amp_c = 0.3;
+var amp_b = 0.2;
+var amp_c = 0.2;
+var key_diff = 0;
 
 Pdef(\seq1,
 	Pbind(
 		\instrument, \gobeat,
         \freq, Pseq([52, 52, 52, 71], inf).midicps,
 		// \atk, Pseq([0.1, 0.2, 0.5], inf),
-		\dur, Pseq([0.1, 0.1, 0.1], inf),
-		\dur, 1.2,
+		\dur, Pseq([0.4, 0.1, 0.1], inf),
+		// \dur, 1.2,
 		\delta, 0.5,
 		\amp, amp_a
 
@@ -152,33 +156,72 @@ Pdef(\seq2,
 ).quant_(4).play;
 
 
+
 Pdef(\seq3,
 	Pbind(
 		\instrument, \gobeat,
         //\freq, Pseq([69, 69, 69]-5, inf).midicps,
 //		\freq, Pseq([61, 59, 61, 63, 64, 63, 61, 56, 59, 56], inf).midicps,
 		\freq, Pseq([
-			Pseq([61, 59, 61, 63, 64, 63, 61, 56, 59, 56], 1).midicps,
-			Pseq([61, 59, 61, 63, 64, 63, 64, 66, 68, 64], 1).midicps,
-			Pseq([61, 59, 61, 63, 64, 63, 61, 56, 59, 56], 1).midicps,
-			Pseq([61, 59, 61, 63, 64, 63, 64, 66, 68, 68], 1).midicps
+			Pseq([61, 59, 61, 63, 64, 63, 61, 56, 59, 56]-key_diff, 1).midicps,
+			Pseq([61, 59, 61, 63, 64, 63, 64, 66, 68, 64]-key_diff, 1).midicps,
+			Pseq([61, 59, 61, 63, 64, 63, 61, 56, 59, 56]-key_diff, 1).midicps,
+			Pseq([61, 59, 61, 63, 64, 63, 64, 66, 68, 68]-key_diff, 1).midicps
 		], inf),
 		// \atk, Pseq([0.1, 0.2, 0.5], inf),
-		\dur, Pseq([0.25], inf),
-		// \dur, 1.2,
+		// \dur, Pseq([0.25], inf), // no sustain
+		\dur, 1.2, // sustain
 		\delta, Pseq([0.75, 0.25, 0.5, 0.5, 0.75, 0.25, 0.5, 0.5, 0.75, 3.25], inf),
 		\amp, amp_c
 	)
 ).quant_(4).play;
 )
 
-(
+(// 중세 오르간
+Pdef(\seq1,
+	Pbind(
+		\instrument, \ddd,
+        \freq, Pseq([240, 300, 290]*2, inf),
+		\dur, Pseq([0.1, 0.2, 0.5, 0.2, 1.4, 0.1], inf),
+		\delta, Pseq([0.5], inf),
+		\amp, 0.3
+	)
+).quant_(6).play;
+
+
 Pdef(\seq2,
 	Pbind(
 		\instrument, \ddd,
-        \freq, Pseq([240, 300, 290], inf),
-		\dur, Pseq([0.1, 0.2, 0.5, 0.2, 1.4, 0.1], inf),
-		\delta, Pseq([0.5], inf)
+		\freq, Pseq(([66, 64, 63, 64, 66, 64, 63, 64, 63, 59, 61]+24).midicps, inf),
+		\toneLow, 7,
+		\toneGain, 0.1,
+		\atk, 0.3,
+		// \dur, Pseq([3.5, 0.25, 0.25, 4, 3.5, 0.25, 0.25, 0.25, 0.25, 3, 0.5], inf),
+		// \dur, 2.0,
+		\dur, Pseq([2.5, 0.25, 0.25, 3, 2.5, 0.25, 0.25, 0.25, 0.25, 2.5, 0.5]*0.8, inf),
+		// \dur, 0.2,
+		\delta, Pseq([2.5, 0.25, 0.25, 3, 2.5, 0.25, 0.25, 0.25, 0.25, 2, 0.5], inf),
+		\amp, Pseq([0.3, 0.2, 0.2, 0.2, 0.3, 0.1, 0.15, 0.2, 0.15, 0.3, 0.3]*1.5, inf),
+		// \amp, 0.1
 	)
-).quant_(4).play;
+).quant_(6).play;
+
+
+Pdef(\seq3,
+	Pbind(
+		\instrument, \ddd,
+		\freq, Pseq(([66, 73, 73, 73, 73, 75, 73]+7).midicps, inf),
+		\toneLow, 4,
+		\toneGain, 0.2,
+		\atk, 0.1,
+		// \dur, Pseq([3.5, 0.25, 0.25, 4, 3.5, 0.25, 0.25, 0.25, 0.25, 3, 0.5], inf),
+		// \dur, 2.0,
+		\dur, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 4, 1, 0.5]*2, inf),
+		// \dur, 2,
+		\delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5, 1.0, 0.5], inf),
+		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2, 1.0, 0.6]*0.7, inf),
+		// \amp, 0.9
+	)
+).quant_(6).play;
+
 )
