@@ -1,4 +1,4 @@
-2막 꼬이는 부분 음악?
+2막 꼬이는 부분 음악 없다
 
 
 
@@ -209,192 +209,99 @@ Pdef(\seq1,
 
 
 (// 중세 오르간
+~fadeOutTime = 6.0;
 
-
+// rytm
 ~m1 = Pdef(\seq_med_1,
 	Pbind(
 		\instrument, \liedR,
-		// \freq, Pseq([240, 300, 290], inf),
 		\freq, Pseq([
+			Pseq(([49, 54, 53]).midicps, 4),
 			Pseq(([51, 56, 55]).midicps, 4),
-			Pseq(([49, 54, 53]).midicps, 4)
 		], inf),
 		\dur, Pseq([0.1, 0.2, 0.5, 0.2, 1.4, 0.1], inf),
 		\delta, Pseq([0.5], inf),
-		\amp, 0.3
+		\amp, 0.2
 	)
-).quant_(6).play;
+).quant_(6);
+~m1.fadeTime = ~fadeOutTime;
 
-
+// melody
 ~m2 = Pdef(\seq_med_2,
 	Pbind(
 		\instrument, \liedR,
-		\freq, Pseq(([66, 64, 63, 64, 66, 64, 63, 64, 63, 59, 61]).midicps, inf),
-		\toneLow, 7,
-		\toneGain, 0.1,
+		\freq, Pseq([
+			Pseq(([0, 67, 69, 71, 62, 66, 67, 69]-4+12).midicps, 1),
+		], inf),
+
 		\atk, 0.3,
-		// \dur, Pseq([3.5, 0.25, 0.25, 4, 3.5, 0.25, 0.25, 0.25, 0.25, 3, 0.5], inf),
-		// \dur, 2.0,
-		\dur, Pseq([2.5, 0.25, 0.25, 3, 2.5, 0.25, 0.25, 0.25, 0.25, 2.5, 0.5]*0.8, inf),
-		// \dur, 0.2,
-		\delta, Pseq([2.5, 0.25, 0.25, 3, 2.5, 0.25, 0.25, 0.25, 0.25, 2, 0.5], inf),
-		\amp, Pseq([0.3, 0.2, 0.2, 0.2, 0.3, 0.1, 0.15, 0.2, 0.15, 0.3, 0.3]*0.5, inf),
-		// \amp, 0.1
+		\dur, Pseq([Rest(2.5), 0.5, 1.5, 1.5, 2.5, 0.5, 1.5, 1.5], inf),
+		\delta, Pseq([Rest(2.5), 0.5, 1.5, 1.5, 2.5, 0.5, 1.5, 1.5], inf),
+		\amp, Pseq([0, 0.2, 0.24, 0.3, 0.24, 0.17, 0.22, 0.3]*0.5, inf),
 	)
-).quant_(6).play;
+).quant_(6);
+~m2.fadeTime = ~fadeOutTime;
 
-
+// 빰빠라밤
 ~m3 = Pdef(\seq_med_3,
 	Pbind(
 		\instrument, \liedR,
 		\freq, Pseq([
-			Pseq(([[66, 62], 73, 73, 73, 73]-12).midicps, 1),
-     		Pseq(([[66, 64], 73, 73, 73, 73]-12).midicps, 1),
-			Pseq(([[66, 62], 73, 73, 73, 73]-12).midicps, 1),
-     		Pseq(([[66, 64], 73, 73, 73, 73]-12).midicps, 1)
+			Pseq(([66, 73, 73, 73, 73]-10).midicps, 1),
+			Pseq(([66, 73, 73, 73, 73]-8).midicps, 1),
+			// Pseq(([[66, 64], 73, 73, 73, 73]-12).midicps, 1),
+			// Pseq(([[66, 62], 73, 73, 73, 73]-12).midicps, 1),
+			// Pseq(([[66, 64], 73, 73, 73, 73]-12).midicps, 1)
 		], inf),
-		\toneLow, 4,
-		\toneGain, 0.2,
+
 		\atk, 0.1,
-		\dur, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 4]*2, inf),
-		// \dur, 2,
+		\dur, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 3], inf), // 박이 끝나는 부분이 일치
 		\delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 3], inf), // 박이 끝나는 부분이 일치
 		// \delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5], inf), // 박이 끝나는 부분이 불일치, 페이즈 음악, 돌림노래 같은 느낌
 		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2]*0.4, inf),
-		// \amp, 0.9
 	)
-).quant_(6).play;
+).quant_(6);
+~m3.fadeTime = ~fadeOutTime;
 
-
+//bass
 ~m4 = Pdef(\seq_med_4,
 	Pbind(
 		\instrument, \liedR,
 		\freq, Pseq([
-			Pseq(([0, 54, 52, 54, 0, 57, 55, 54]-12).midicps, 1)
-			// Pseq(([0, 54, 52, 54, 0, 57, 55, 54]).midicps, 1),
-			// Pseq(([0, 70, 72, 73, 68]).midicps, 1)
+			Pseq(([41]-16).midicps, 4),
+			Pseq(([43]-16).midicps, 4)
 		], inf),
-		\toneLow, 4,
-		\toneGain, 0.2,
+
 		\atk, 0.1,
-		\dur, Pseq([Rest(1), 2/2, 0.25, 2/4], inf),
-		// \dur, 2,
-		\delta, Pseq([1, 2.75, 0.25, 2], inf), // 박이 끝나는 부분이 일치
-		// \delta, Pseq([2], inf), // 박이 끝나는 부분이 일치
-		// \delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5], inf), // 박이 끝나는 부분이 불일치, 페이즈 음악, 돌림노래 같은 느낌
-		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2]*0.4, inf),
-		// \amp, 0.9
+		\dur, Pseq([0.3], inf),
+		\delta, Pseq([1.5], inf),
+		\amp, Pseq([0.3], inf),
 	)
-).quant_(6).play;
+).quant_(6);
+~m4.fadeTime = ~fadeOutTime;
+
+);
 
 
 
-~m5 = Pdef(\seq_med_5,
-	Pbind(
-		\instrument, \liedR,
-		\freq, Pseq([
-			Pseq(([0, 70, 72, 73, 68, 66, 65]-4).midicps, 1)
-		], inf),
-		\toneLow, 4,
-		\toneGain, 0.2,
-		\atk, 0.1,
-		\dur, Pseq([Rest(1), 1, 1, 1, 3, 1, 2], inf),
-		// \dur, 2,
-		\delta, Pseq([1, 1, 1, 1, 3, 1, 4], inf), // 박이 끝나는 부분이 일치
-		// \delta, Pseq([2], inf), // 박이 끝나는 부분이 일치
-		// \delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5], inf), // 박이 끝나는 부분이 불일치, 페이즈 음악, 돌림노래 같은 느낌
-		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2]*0.3, inf),
-		// \amp, 0.9
-	)
-).quant_(6).play;
-
-
+(// play all
+~m1.play;~m2.play;~m3.play;~m4.play;
 )
 
-//
-// ~m4 = Pdef(\seq_med_4,
-// 	Pbind(
-// 		\instrument, \liedR,
-// 		\freq, Pseq([
-// 			Pseq(([54, 52, 54, 57, 55, 54]-12).midicps, 1),
-// 			// Pseq(([54, 52, 54, 57, 55, 54]).midicps, 1)
-// 		], inf),
-// 		\toneLow, 4,
-// 		\toneGain, 0.2,
-// 		\atk, 0.1,
-// 		\dur, Pseq([3.75, 0.25, 4, 3.75, 0.25, 4], inf),
-// 		// \dur, 2,
-// 		\delta, Pseq([3.5, 0.25, 4.25, 3.5, 0.25, 4.25], inf), // 박이 끝나는 부분이 일치
-// 		// \delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5], inf), // 박이 끝나는 부분이 불일치, 페이즈 음악, 돌림노래 같은 느낌
-// 		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2]*0.5, inf),
-// 		// \amp, 0.9
-// 	)
-// ).quant_(6).play;
-//
-
-/* 빰빠라밤 인데 끝나는 부분에 다음 루틴과 연결하는 음이 있는 패턴
-Pdef(\seq4,
-	Pbind(
-		\instrument, \ddd,
-		\freq, Pseq(([66, 73, 73, 73, 73, 75, 73]+7).midicps, inf),
-		\toneLow, 4,
-		\toneGain, 0.2,
-		\atk, 0.1,
-		// \dur, Pseq([3.5, 0.25, 0.25, 4, 3.5, 0.25, 0.25, 0.25, 0.25, 3, 0.5], inf),
-		// \dur, 2.0,
-		\dur, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 4, 1, 0.5]*2, inf),
-		// \dur, 2,
-		\delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5, 1.0, 0.5], inf),
-		// \amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2, 1.0, 0.6]*0.7, inf),
-		\amp, 0.0
-	)
-).quant_(6).play;
-*/
-
-
+Cue: 중세 오르간 음악은 태이씨 의자 올라와서 망원경 다 펴고 탑 조명이 들어오면 페이드로 나간다. ("장인의 운명")
+(// fadeout
+~m1 = Pdef(\seq_med_1, Pbind(\amp, 0)).play;
+~m2 = Pdef(\seq_med_2, Pbind(\amp, 0)).play;
+~m3 = Pdef(\seq_med_3, Pbind(\amp, 0)).play;
+~m4 = Pdef(\seq_med_4, Pbind(\amp, 0)).play;
 )
 
-(
-~m1.play;
-~m2.play;
-~m3.play;
-~m4.play;
-~m5.play;
-~m6.play;
-)
-
-(
-~m1.stop;
-~m2.stop;
-~m3.stop;
-~m4.stop;
-~m5.stop;
+(// stop
+~m1.stop;~m2.stop;~m3.stop;~m4.stop;
 )
 
 
 
-
-
-
-//lead
-(
-c = Pbind(
-        \instrument,        \liedR,
-        \dur,               Pseq([3, 3, 3, 3, 8]/2, 12),
-        \sustain,               Pseq([3, 3, 3, 3, 6]/2, 12),
-//        \nharms,            32,
-        \root,             [-3, 12],
-        \degree,           Ptuple( [
-                                Pseq( (0..3), 12),
-                                Pseq( [4, 5, 4, 3, 2], 12)
-                            ], 12),
-        \amp,               0.02
-
-    ).play;
-)
-
-
-중세 오르간 음악은 태이씨 의자 올라와서 망원경 다 펴고 탑 조명이 들어오면 페이드로 나간다.
 
 그 다음은 모자르트 음악.
 
