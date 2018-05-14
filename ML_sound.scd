@@ -29,6 +29,21 @@ SynthDef(\ddd, {|freq = 240, dur = 0.2, gate = 1, atk = 0.1, amp = 0.5, toneLow 
 	var no = WhiteNoise.ar(0.005) * LFTri.kr(80, mul: 0.4);
 	Out.ar(0, Pan2.ar((sig+no)*env)*amp);
 }).add;
+
+//new lead - freq를 set 으로 변화 할 때 특별한 효과가 생긴다.
+SynthDef(\liedR,
+    {
+        |freq = 2598, amp = 0.3, gate = 1, efxfreq = 700, panfreq = 3, dronerq = 0.4|
+        var sig, env, efx, pansig, out, delay, drone;
+        sig = Saw.ar(freq, mul: amp);
+        env = EnvGen.kr(Env.adsr(0.1, 0.2, 0.5, 2, 1), gate, doneAction: 2);
+        efx = RLPF.ar(sig*env, efxfreq, 0.2, 1);
+        drone = RLPF.ar(BrownNoise.ar(0.01), 120, dronerq, 1);
+        delay = CombC.ar(efx+drone, 0.2, 0.1, 0.03, 1, efx);
+        //env = EnvGen.kr(Env.asr(0.1, 0.2, 0.5), gate, doneAction: 2);
+        pansig = LFTri.kr(panfreq, mul: 0.5, add: 0.25);
+        out = Out.ar(0, Pan2.ar(delay, pansig));
+    }).add;
 )
 
 
@@ -187,16 +202,23 @@ Pdef(\seq1,
 ~p1.stop;
 ~p2.stop;
 ~p3.stop;
-
+~m1.play;
+~m2.play;
 
 정아씨 판서 점 찍을 때 중세 음악과 오버랩,
 
 
 (// 중세 오르간
-~m1 = Pdef(\seq1,
+
+
+~m1 = Pdef(\seq_med_1,
 	Pbind(
-		\instrument, \ddd,
-        \freq, Pseq([240, 300, 290]*2, inf),
+		\instrument, \liedR,
+		// \freq, Pseq([240, 300, 290], inf),
+		\freq, Pseq([
+			Pseq(([51, 56, 55]).midicps, 4),
+			Pseq(([49, 54, 53]).midicps, 4)
+		], inf),
 		\dur, Pseq([0.1, 0.2, 0.5, 0.2, 1.4, 0.1], inf),
 		\delta, Pseq([0.5], inf),
 		\amp, 0.3
@@ -204,10 +226,10 @@ Pdef(\seq1,
 ).quant_(6).play;
 
 
-~m2 = Pdef(\seq2,
+~m2 = Pdef(\seq_med_2,
 	Pbind(
-		\instrument, \ddd,
-		\freq, Pseq(([66, 64, 63, 64, 66, 64, 63, 64, 63, 59, 61]+24).midicps, inf),
+		\instrument, \liedR,
+		\freq, Pseq(([66, 64, 63, 64, 66, 64, 63, 64, 63, 59, 61]).midicps, inf),
 		\toneLow, 7,
 		\toneGain, 0.1,
 		\atk, 0.3,
@@ -216,28 +238,99 @@ Pdef(\seq1,
 		\dur, Pseq([2.5, 0.25, 0.25, 3, 2.5, 0.25, 0.25, 0.25, 0.25, 2.5, 0.5]*0.8, inf),
 		// \dur, 0.2,
 		\delta, Pseq([2.5, 0.25, 0.25, 3, 2.5, 0.25, 0.25, 0.25, 0.25, 2, 0.5], inf),
-		\amp, Pseq([0.3, 0.2, 0.2, 0.2, 0.3, 0.1, 0.15, 0.2, 0.15, 0.3, 0.3]*1.5, inf),
+		\amp, Pseq([0.3, 0.2, 0.2, 0.2, 0.3, 0.1, 0.15, 0.2, 0.15, 0.3, 0.3]*0.5, inf),
 		// \amp, 0.1
 	)
 ).quant_(6).play;
 
 
-~m3 = Pdef(\seq3,
+~m3 = Pdef(\seq_med_3,
 	Pbind(
-		\instrument, \ddd,
-		\freq, Pseq(([66, 73, 73, 73, 73]+7).midicps, inf),
+		\instrument, \liedR,
+		\freq, Pseq([
+			Pseq(([[66, 62], 73, 73, 73, 73]-12).midicps, 1),
+     		Pseq(([[66, 64], 73, 73, 73, 73]-12).midicps, 1),
+			Pseq(([[66, 62], 73, 73, 73, 73]-12).midicps, 1),
+     		Pseq(([[66, 64], 73, 73, 73, 73]-12).midicps, 1)
+		], inf),
 		\toneLow, 4,
 		\toneGain, 0.2,
 		\atk, 0.1,
 		\dur, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 4]*2, inf),
 		// \dur, 2,
 		\delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 3], inf), // 박이 끝나는 부분이 일치
-		\delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5], inf), // 박이 끝나는 부분이 불일치, 페이즈 음악, 돌림노래 같은 느낌
-		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2]*0.2, inf),
+		// \delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5], inf), // 박이 끝나는 부분이 불일치, 페이즈 음악, 돌림노래 같은 느낌
+		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2]*0.4, inf),
 		// \amp, 0.9
 	)
 ).quant_(6).play;
 
+
+~m4 = Pdef(\seq_med_4,
+	Pbind(
+		\instrument, \liedR,
+		\freq, Pseq([
+			Pseq(([0, 54, 52, 54, 0, 57, 55, 54]-12).midicps, 1)
+			// Pseq(([0, 54, 52, 54, 0, 57, 55, 54]).midicps, 1),
+			// Pseq(([0, 70, 72, 73, 68]).midicps, 1)
+		], inf),
+		\toneLow, 4,
+		\toneGain, 0.2,
+		\atk, 0.1,
+		\dur, Pseq([Rest(1), 2/2, 0.25, 2/4], inf),
+		// \dur, 2,
+		\delta, Pseq([1, 2.75, 0.25, 2], inf), // 박이 끝나는 부분이 일치
+		// \delta, Pseq([2], inf), // 박이 끝나는 부분이 일치
+		// \delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5], inf), // 박이 끝나는 부분이 불일치, 페이즈 음악, 돌림노래 같은 느낌
+		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2]*0.4, inf),
+		// \amp, 0.9
+	)
+).quant_(6).play;
+
+
+
+~m5 = Pdef(\seq_med_5,
+	Pbind(
+		\instrument, \liedR,
+		\freq, Pseq([
+			Pseq(([0, 70, 72, 73, 68, 66, 65]-4).midicps, 1)
+		], inf),
+		\toneLow, 4,
+		\toneGain, 0.2,
+		\atk, 0.1,
+		\dur, Pseq([Rest(1), 1, 1, 1, 3, 1, 2], inf),
+		// \dur, 2,
+		\delta, Pseq([1, 1, 1, 1, 3, 1, 4], inf), // 박이 끝나는 부분이 일치
+		// \delta, Pseq([2], inf), // 박이 끝나는 부분이 일치
+		// \delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5], inf), // 박이 끝나는 부분이 불일치, 페이즈 음악, 돌림노래 같은 느낌
+		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2]*0.3, inf),
+		// \amp, 0.9
+	)
+).quant_(6).play;
+
+
+)
+
+//
+// ~m4 = Pdef(\seq_med_4,
+// 	Pbind(
+// 		\instrument, \liedR,
+// 		\freq, Pseq([
+// 			Pseq(([54, 52, 54, 57, 55, 54]-12).midicps, 1),
+// 			// Pseq(([54, 52, 54, 57, 55, 54]).midicps, 1)
+// 		], inf),
+// 		\toneLow, 4,
+// 		\toneGain, 0.2,
+// 		\atk, 0.1,
+// 		\dur, Pseq([3.75, 0.25, 4, 3.75, 0.25, 4], inf),
+// 		// \dur, 2,
+// 		\delta, Pseq([3.5, 0.25, 4.25, 3.5, 0.25, 4.25], inf), // 박이 끝나는 부분이 일치
+// 		// \delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5], inf), // 박이 끝나는 부분이 불일치, 페이즈 음악, 돌림노래 같은 느낌
+// 		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2]*0.5, inf),
+// 		// \amp, 0.9
+// 	)
+// ).quant_(6).play;
+//
 
 /* 빰빠라밤 인데 끝나는 부분에 다음 루틴과 연결하는 음이 있는 패턴
 Pdef(\seq4,
@@ -265,12 +358,39 @@ Pdef(\seq4,
 ~m1.play;
 ~m2.play;
 ~m3.play;
+~m4.play;
+~m5.play;
+~m6.play;
 )
 
 (
 ~m1.stop;
 ~m2.stop;
 ~m3.stop;
+~m4.stop;
+~m5.stop;
+)
+
+
+
+
+
+
+//lead
+(
+c = Pbind(
+        \instrument,        \liedR,
+        \dur,               Pseq([3, 3, 3, 3, 8]/2, 12),
+        \sustain,               Pseq([3, 3, 3, 3, 6]/2, 12),
+//        \nharms,            32,
+        \root,             [-3, 12],
+        \degree,           Ptuple( [
+                                Pseq( (0..3), 12),
+                                Pseq( [4, 5, 4, 3, 2], 12)
+                            ], 12),
+        \amp,               0.02
+
+    ).play;
 )
 
 
