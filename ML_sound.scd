@@ -41,9 +41,153 @@ SynthDef(\liedR,
         drone = RLPF.ar(BrownNoise.ar(0.01), 120, dronerq, 1);
         delay = CombC.ar(efx+drone, 0.2, 0.1, 0.03, 1, efx);
         //env = EnvGen.kr(Env.asr(0.1, 0.2, 0.5), gate, doneAction: 2);
-        pansig = LFTri.kr(panfreq, mul: 0.5, add: 0.25);
+        pansig = LFTri.kr(panfreq, mul: 0.5, add: 0);
         out = Out.ar(0, Pan2.ar(delay, pansig));
     }).add;
+
+
+
+
+// Synthdef 1
+SynthDef("latooncarfian", { arg out = 0, freq = 440, chFreq1 = 2, chFreq2 = 2,
+	a = 1, b = 3, c = 0.5, d = 0.5, gate = 1, amp = 0.3;
+    var s1, s2, env;
+        s1 = LatoocarfianN.ar(
+    SampleRate.ir/4,
+    LFNoise2.kr(chFreq1,1.5,1.5),
+    LFNoise2.kr(chFreq1,1.5,1.5),
+    LFNoise2.kr(chFreq1,0.5,1.5),
+    LFNoise2.kr(chFreq1,0.5,1.5), mul: 0.1
+);
+
+        s2 = LatoocarfianN.ar(
+    SampleRate.ir/4,
+    LFNoise2.kr(chFreq2,1.5,1.5),
+    LFNoise2.kr(chFreq2,1.5,1.5),
+    LFNoise2.kr(chFreq2,0.5,1.5),
+    LFNoise2.kr(chFreq2,0.5,1.5), mul: 0.1
+);
+
+Out.ar(out, [s1, s2] * amp);
+
+}).add;
+
+
+// Synthdef 2
+SynthDef(
+    \hafen,
+    {
+        arg freqScale = 200, amp = 0.1, gate = 1, inNum = 0;
+        var sig, env, envgen, inputs, n = 32;
+        inputs = [PinkNoise.ar(0.3), WhiteNoise.ar(0.1), ClipNoise.ar(0.1), BrownNoise.ar(0.2)];
+        sig = DynKlank.ar(`[ (1..13)*freqScale, 1/(1..13), nil ],
+            Select.ar(inNum, inputs));
+        env = Env(
+		[0]++{0.8.rand.squared}.dup(n-1) ++ [0],
+				{rrand(0.1,0.3)}.dup(n),
+				\lin, n-8, 8 );
+        envgen = EnvGen.kr(env, gate, doneAction: 2);
+        Out.ar(0, Pan2.ar(sig * envgen, 0, amp));
+    }
+).add;
+
+
+// Synthdef 3
+SynthDef("lfp", { arg out = 100, freq = 440, chFreq1 = 2, chFreq2 = 2,
+	a = 1, b = 3, c = 0.5, d = 0.5,
+	aa = 1, bb = 3, cc = 0.5, dd = 0.5,
+	gate = 1, amp = 0.1;
+    var s1, s2, env;
+    env = EnvGen.kr(Env.perc(0.15, 0.05), gate, doneAction: 2);
+    s1 = LatoocarfianN.ar(SampleRate.ir/4, a, b, c, d, mul: 0.1);
+    s2 = LatoocarfianN.ar(SampleRate.ir/4, aa, bb, cc, dd, mul: 0.1);
+
+Out.ar(out, [s1, s2]*env*amp);
+
+}).add;
+
+
+// Synthdef 4 - Reverb
+SynthDef(\verb,
+    {
+        arg in = 0, room = 2, rtime = 1, dam = 0.3, sp = 5, tail = 0.2;
+        var sig, fil;
+        sig = In.ar(in, 1);
+        fil = GVerb.ar(sig, room = 2, rtime, dam, 0.5, sp, taillevel: tail);
+        Out.ar(0, fil);
+
+}).add;
+
+
+// Synthdef 5
+SynthDef(\woong,
+    {
+        arg cutoff = 202, rq = 1.0, sn = 8;
+        var sig, fil, lfo;
+
+        lfo = LFClipNoise.kr(sn, mul: 0.5, add: 0.5);
+        sig = Saw.ar([50, 75], lfo);
+        fil = RLPF.ar(sig, cutoff, rq);
+        Out.ar(0, fil);
+    }
+).add;
+
+
+// Synthdef 6
+SynthDef(\woonglong,
+    {
+        arg cutoff = 202, rq = 1.0, sn = 8, gate = 1, amp = 0.6;
+        var sig, fil, lfo, env;
+
+        env = EnvGen.kr(Env.asr(1.3, 1, 3), gate, doneAction: 2);
+        sig = Saw.ar([50, 75], 1);
+        fil = RLPF.ar(sig, cutoff, rq);
+        Out.ar(0, fil * env * amp);
+    }
+).add;
+
+
+// Synthdef 7
+SynthDef(\dirac, {| out, amp = 0.03, freq = 100, decay = 0.01, pos = -1 |
+		var i = Impulse.ar(0), sig;
+//		sig = Mix.fill(6, {Ringz.ar(i, Rand(freq, freq*[1.5, 2]), decay)});
+		sig = Mix.fill(6, {Ringz.ar(i, Rand(freq, freq*1.5), decay)});
+		DetectSilence.ar(sig, doneAction: 2);
+		sig = Pan2.ar(sig, pos, amp);
+		Out.ar(out, sig);
+	}).add;
+
+
+// Synthdef 8
+SynthDef("help-TCoin", { arg out=0, prob=0.5;
+	var trig;
+	trig = Impulse.ar(20, 0, SinOsc.kr(0.5,0,1,1));
+	Out.ar(out,
+		Mix.fill(3, {Ringz.ar(CoinGate.ar(prob, trig*0.5), #[1,1.5]*Rand(5000, 9000), 0.01)})*0.2
+	)
+}).add;
+
+
+SynthDef(\sori,
+	{
+		arg amp = 1, freq = 20, freq2 = 20, gate = 1, ph = 0,
+		freq3 = 10, filfreq = 100, rq = 0.2, freq4 = 100, dop = 0.5, harm = 200 ;
+		var sig, env, sig2, env2, sig3, sig4, fil;
+		//		env2 = EnvGen.kr(Env.perc(0.1, 0.5), gate, doneAction: 2);
+		env2 = EnvGen.kr(Env.asr, gate, doneAction: 2);
+		//		sig2 = SinOsc.kr(freq2*env2, ph);
+		//		sig2 = LFTri.kr(freq2*env2, ph);
+		//		sig2 = WhiteNoise.kr(1);
+		sig4 = Blip.kr(freq4, harm);
+		sig3 = SinOsc.kr(freq3);
+		sig2 = LFNoise0.kr(freq2);
+
+		sig = SinOsc.ar(freq*sig4, mul: 1);
+		env = EnvGen.kr(Env.asr, gate, doneAction: 2);
+		fil = RHPF.ar(sig, freq, rq);
+		Out.ar(0, Pan2.ar(fil*env*amp));
+	}
+).add;
 )
 
 
@@ -137,7 +281,7 @@ Pdef(\seq1,
 
 
 
-(// 고대 비트
+(// 1. 고대 비트
 ~amp_a = 0.1;
 ~amp_b = 0.2;
 ~amp_c = 0.2;
@@ -208,7 +352,7 @@ Pdef(\seq1,
 정아씨 판서 점 찍을 때 중세 음악과 오버랩,
 
 
-(// 중세 오르간
+(// 2. 중세 오르간
 ~fadeOutTime = 6.0;
 
 // rytm
@@ -221,7 +365,7 @@ Pdef(\seq1,
 		], inf),
 		\dur, Pseq([0.1, 0.2, 0.5, 0.2, 1.4, 0.1], inf),
 		\delta, Pseq([0.5], inf),
-		\amp, 0.2
+		\amp, 0.1
 	)
 ).quant_(6);
 ~m1.fadeTime = ~fadeOutTime;
@@ -237,7 +381,7 @@ Pdef(\seq1,
 		\atk, 0.3,
 		\dur, Pseq([Rest(2.5), 0.5, 1.5, 1.5, 2.5, 0.5, 1.5, 1.5], inf),
 		\delta, Pseq([Rest(2.5), 0.5, 1.5, 1.5, 2.5, 0.5, 1.5, 1.5], inf),
-		\amp, Pseq([0, 0.2, 0.24, 0.3, 0.24, 0.17, 0.22, 0.3]*0.5, inf),
+		\amp, Pseq([0, 0.2, 0.24, 0.3, 0.24, 0.17, 0.22, 0.3]*0.4, inf),
 	)
 ).quant_(6);
 ~m2.fadeTime = ~fadeOutTime;
@@ -258,7 +402,7 @@ Pdef(\seq1,
 		\dur, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 3], inf), // 박이 끝나는 부분이 일치
 		\delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 3], inf), // 박이 끝나는 부분이 일치
 		// \delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5], inf), // 박이 끝나는 부분이 불일치, 페이즈 음악, 돌림노래 같은 느낌
-		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 1.2]*0.4, inf),
+		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 0.9]*0.4, inf),
 	)
 ).quant_(6);
 ~m3.fadeTime = ~fadeOutTime;
@@ -311,3 +455,164 @@ Cue: 중세 오르간 음악은 태이씨 의자 올라와서 망원경 다 펴�
 
 찰칵찰칵 음악
 
+
+(// 3. 모던(찰칵찰칵, 컨베이어, 코카콜라)
+~amp_mor_a = 0.3;
+~freqAdd = 3;
+// ~freqAdd = 0;
+
+~c1 = Pdef(\seq_mor_1,
+	Pbind(
+		\instrument, \sori,
+		\dur, Pseq([
+			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
+			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 2, 2], 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 44, 44]+~freqAdd).midicps, 1),
+			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd).midicps, 1),
+		], inf),
+		\freq4, Pseq(([112]).midicps, inf),
+		\delta, Pseq([
+			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
+			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+		], inf),
+		\amp, ~amp_mor_a
+
+	)
+).quant_(0).play;
+// 112.midicps
+// 115.midicps
+// 110.midicps
+// 120.midicps
+// 5.midicps
+// 160.midicps%s.sampleRate
+// 80.midicps%s.sampleRate
+
+~c2 = Pdef(\seq_mor_2,
+	Pbind(
+		\instrument, \sori,
+		\dur, Pseq([
+			Pseq([0.25], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 2, 2], 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([49, 56, 49, 56, 49, 44, 44]+24).midicps, 1),
+			// Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+3).midicps, 1),
+		], inf),
+		\freq4, Pseq([
+			Pseq([5], 7*4),
+			Pseq([20], 7*4),
+			Pseq([30], 7*4),
+			Pseq([
+				Pseq([40], 7*4),
+				Pseq([90], 7*4),
+				Pseq([50], 7*4),
+				Pseq([80], 7*4),
+				Pseq([50], 7*2),
+			], inf),
+		], inf),
+		\delta, Pseq([
+			Pseq([0.25], 1),
+		], inf),
+		\amp, ~amp_mor_a/3
+
+	)
+).quant_(0).play;
+
+
+)
+
+(
+a = Synth(\sori);
+a.set(\freq, 200, \freq2, 20, \freq3, 10, \amp, 0.1, \freq4, 100);
+)
+
+
+//lead
+(
+c = Pbind(
+        \instrument,        \sori,
+//        \nharms,            32,
+	// \root,             [-3, 12],
+	\dur,           Pseq([5, 5, 5, 4, 4, 3, 7, 3, 2, 4, 6, 2]/5, 12),
+	\freq,           Pseq([50, 100, 200, 300, 100, 300, 200], 12),
+	\freq4,          Pseq([4, 6, 9, 2, 3, 4, 6, 2, 8, 2, 1, 30], 12),
+        \amp,               0.02
+
+    ).play;
+)
+
+
+// 찰칵찰칵?
+//ambient
+(
+c = Pbind(
+        \instrument,        \sori,
+        \dur,               Pseq([4, 2, 1, 5, 1, 2, 0.4, 0.2, 0.5]/3, 9),
+        \degree,            Pseq( [1, 2, 7, 2, 22, 39, 44]/148, 9),
+        \amp,               0.1
+
+    ).play;
+// )
+
+
+( // 통통통통
+{
+	var p, a, b;
+	p = Impulse.ar(8);
+	a = SinOsc.ar(1200, 0, Decay2.ar(p, 0.005, 0.1));
+	b = SinOsc.ar(#[224, 100],  0, Decay2.ar(PulseDivider.ar(p, MouseX.kr(1,8).round(1)), 0.005, 0.5));
+
+	[b, a] * 0.4
+}.play;
+)
+
+
+( // 타다다닥
+t = { arg gate=1, prob = 0.4;
+	var env, n=32, sig, trig;
+	trig = Impulse.ar(150, 0, SinOsc.kr(0.5,0,0.5,0.5));
+
+	sig = Mix.fill(3, {Ringz.ar(CoinGate.ar(prob, trig*0.5), #[0.1, 1, 3]*Rand(5000, 6000), 0.1)})*0.2;
+	env = Env(
+		[0]++{1.0.rand.squared}.dup(n-1)++[0],
+				{rrand(0.005,0.3)}.dup(n),
+				\lin, n-8, 8 );
+	EnvGen.kr(env, gate, doneAction: 2) * sig
+}.play;
+)
+
+t.free;
+#[1,1.5]
+
+['a']++['b']
+		[0]++{1.0.rand.squared}.dup(3-1)++[0]
+
+
+Ringz.ar(
+
+p = Pbind(\instrument, \latooncarfian);
+
+p.play;
+
+(// 으르렁대?
+p.stream = Pbind(
+	\instrument, \latooncarfian,
+    \dur, 1,
+	\a, Prand((0.1, 0.2..3.0), inf),
+	\b, Prand((0.1, 0.2..3.0), inf),
+	\c, Prand((0.1, 0.2..3.0), inf),
+	\d, Prand((0.1, 0.2..3.0), inf),
+	\aa, Pbeta(0.1, 3.0, 0.2, 0.2, inf),
+	\bb, Pbeta(0.1, 3.0, 0.2, 0.2, inf),
+	\cc, Pbeta(0.1, 3.0, 0.2, 0.2, inf),
+	\dd, Pbeta(0.1, 3.0, 0.2, 0.2, inf),
+    \amp, 0.1
+).asStream;
+)
+
+p.free;
+
+p.stop
+p.stream = Pbind(\instrument, \latooncarfian, \amp, 0.0).asStream;
