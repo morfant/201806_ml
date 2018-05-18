@@ -4,51 +4,8 @@
 TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 
 
-(
-Buffer.freeAll;
+// ======================================= SynthDef ===========================================
 
-// prepare buffer
-~path_ = "/Users/giy/Library/Mobile Documents/com~apple~CloudDocs/2018_06_ml/audio_sample/";
-
-~buf_intro = Buffer.read(s, ~path_ ++ "0_major_interview.wav");
-
-~buf_mozart = Buffer.read(s, ~path_++"1_1_mozart.wav");
-~buf_beethoven = Buffer.read(s, ~path_++"1_2_beethoven.wav");
-~buf_sari = Buffer.read(s, ~path_++"1_3_sari.wav");
-
-~buf_homeShopping = Buffer.read(s, ~path_++"2_1_shopping.wav");
-~buf_handaesoo = Buffer.read(s, ~path_++"2_2_handaesoo.wav");
-~buf_cello = Buffer.read(s, ~path_++"2_3_cello.wav");
-~buf_bts = Buffer.read(s, ~path_++"2_4_bts.wav");
-
-);
-
-~dd = Buffer.loadDialog;
-~dd.play;
-
-~buf_intro.play;
-~buf_intro.free;
-~buf_intro.release(3.0);
-~buf_intro.stop;
-
-
-
-(
-x = SynthDef(\play_Buffer, { arg out = 0, bufnum;
-    Out.ar( out,
-        PlayBuf.ar(2, bufnum, BufRateScale.kr(bufnum))
-    )
-}).play(s,[\bufnum, ~buf_intro]);
-)
-
-
-x;
-x.release(3.0);
-x.free
-
-
-
-// define synth
 (
 SynthDef(\gobeat, {|freq = 240, dur = 0.2, gate = 1, amp = 0.5|
 	// var env = Line.kr(0.2, 0.0, dur, doneAction:2);
@@ -89,10 +46,6 @@ SynthDef(\liedR,
         out = Out.ar(0, Pan2.ar(delay, pansig));
     }).add;
 
-
-
-
-// Synthdef 1
 SynthDef("latooncarfian", { arg out = 0, freq = 440, chFreq1 = 2, chFreq2 = 2,
 	a = 1, b = 3, c = 0.5, d = 0.5, gate = 1, amp = 0.3;
     var s1, s2, env;
@@ -117,7 +70,6 @@ Out.ar(out, [s1, s2] * amp);
 }).add;
 
 
-// Synthdef 2
 SynthDef(
     \hafen,
     {
@@ -136,7 +88,6 @@ SynthDef(
 ).add;
 
 
-// Synthdef 3
 SynthDef("lfp", { arg out = 100, freq = 440, chFreq1 = 2, chFreq2 = 2,
 	a = 1, b = 3, c = 0.5, d = 0.5,
 	aa = 1, bb = 3, cc = 0.5, dd = 0.5,
@@ -166,16 +117,19 @@ SynthDef(\verb,
 // Synthdef 5
 SynthDef(\woong,
     {
-        arg cutoff = 202, rq = 1.0, sn = 8;
-        var sig, fil, lfo;
+        arg cutoff = 202, rq = 1.0, sn = 8, amp = 0.5, gate = 1, freq = 55, freq2 = 75, freq3 = 100;
+        var sig, fil, lfo, env;
 
+		env = EnvGen.kr(Env.perc, gate, doneAction: 2);
         lfo = LFClipNoise.kr(sn, mul: 0.5, add: 0.5);
-        sig = Saw.ar([50, 75], lfo);
+		sig = Mix.new([Saw.ar(freq, mul: amp/2), Saw.ar(freq3, mul: amp/2), Saw.ar(freq2, mul: amp/2)]) * lfo;
         fil = RLPF.ar(sig, cutoff, rq);
-        Out.ar(0, fil);
+		Out.ar(0, Pan2.ar(fil*amp*env, 0));
     }
 ).add;
 
+
+// {Mix.new([Saw.ar(100, mul: 0.4), Saw.ar(200, mul: 0.4)])!2}.play;
 
 // Synthdef 6
 SynthDef(\woonglong,
@@ -235,95 +189,12 @@ SynthDef(\sori,
 )
 
 
-a = Synth(\ddd, [\dur, 2.0]);
-a = Synth(\sine, [\dur, 2.0]);
-
-
-
-// call synth!
-Synth(\gobeat);
-Synth(\gobeat, [freq: 660, dur: 2.0, amp:0.1]);
-Synth(\gobeat, [freq: 69.midicps, dur: 2.0]);
-
-
-Synth(\ddd);
-
 
 //change tempo
 TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 
 
-// ======================================= Lang side Sequence ===========================================
-// Routine(Tdef)
-(
-Routine{
-	inf.do{
-		Synth(\gobeat, [freq: ([50, 53, 52]).midicps, dur: 1.4]);
-		2.0.wait; // not sec, but beat
-	}
-}.play;
-)
-
-// Tdef for hotswap to code - for live coding :
-/*
-\seq1 은 key 값 - 실행 되는 중에 다시 실행하면 전의 것은 종료 되고 변경된 것으로 업데이트
-*/
-(
-Tdef(\seq1, {
-	inf.do{
-		Synth(\gobeat, [freq: [52, 54, 52].midicps, dur: 1.4]);
-		1.0.wait;
-}}).play;
-)
-
-// sync with Tdefs
-(
-Tdef(\seq1, {
-	inf.do{
-		Synth(\gobeat, [freq: [48,55,60,64,67,81].choose.midicps, dur: 1.4]);
-        // send osc
-        // insert algorithm
-        // push led
-        //...
-		1.0.wait;
-
-}}).play(quant:4);
-)
-
-(
-Tdef(\seq2, {
-	inf.do{
-		Synth(\gobeat, [freq: 64.midicps, dur: 0.5]);
-		1.0.wait;
-}}).play(quant:4);
-)
-
-
-(
-Tdef(\seq3, {
-	inf.do{
-		Synth(\sine, [freq: 58.midicps, dur: 0.5]);
-		1.0.wait;
-}}).play(quant:4);
-)
-
-
-/* ---- ---- ---- ---- */
-
-(
-Pdef(\seq1,
-	Pbind(
-		\instrument, \sine,
-        \freq, Pseq([80, 64, 67, Prand([70, 63], 1), 71]-16, inf).midicps,
-		// \atk, Pseq([0.1, 0.2, 0.5], inf),
-		\dur, Pseq([0.1, 0.2, 0.5], inf),
-		// \dur, 1.2,
-		\delta, 0.5
-	)
-).quant_(4).play;
-)
-
-
+// ======================================= Sequence ===========================================
 
 (// 1. 고대 비트
 ~amp_a = 0.1;
@@ -508,31 +379,84 @@ Cue: 중세 오르간 음악은 태이씨 의자 올라와서 망원경 다 펴�
 찰칵찰칵 음악
 
 
-(// 3. 모던(찰칵찰칵, 컨베이어, 코카콜라)
-~amp_mor_a = 0.3;
-~freqAdd = 3;
+(// 3. 모던(찰칵찰칵, 컨베이어, 코카콜라, 좀더 팝댄스?)
+~amp_mor_a = 0.7;
+~freqAdd = -12;
+~freqAdd2 = -2;
+~freqAdd3 = -7;
 // ~freqAdd = 0;
+~freq4 = 112;
 
 ~c1 = Pdef(\seq_mor_1,
 	Pbind(
-		\instrument, \sori,
+		\instrument, \woong,
 		\dur, Pseq([
 			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
-			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 2, 2], 1),
+			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
 		], inf),
 		\freq, Pseq([
 			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 44, 44]+~freqAdd).midicps, 1),
 			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd).midicps, 1),
 		], inf),
-		\freq4, Pseq(([112]).midicps, inf),
+		\freq2, Pseq([
+			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 44, 44]+~freqAdd2).midicps, 1),
+			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd2).midicps, 1),
+		], inf),
+		\freq3, Pseq([
+			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 44, 44]+~freqAdd3).midicps, 1),
+			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd3).midicps, 1),
+		], inf),
+		\freq4, Pseq(([~freq4]).midicps, inf),
 		\delta, Pseq([
 			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
 			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+		], inf),
+		// \sn, Pseq((80..8), 1),
+		\sn, 8,
+		\amp, ~amp_mor_a
+
+	)
+).quant_(0).play;
+
+
+~c2 = Pdef(\seq_mor_2,
+	Pbind(
+		\instrument, \woong,
+		\dur, Pseq([
+			Pseq([0.25], 1),
+		], inf),
+		\freq, Pseq([
+			Pseq([
+				Pseq(([90]+~freqAdd).midicps, 8*4),
+				Pseq(([80]+~freqAdd).midicps, 8*4),
+				Pseq(([60]+~freqAdd).midicps, 8*4),
+				Pseq(([83]+~freqAdd).midicps, 8*4),
+				Pseq(([70]+~freqAdd).midicps, 8*4),
+			], inf),
+		], inf),
+		\freq2, Pseq([
+			Pseq(([90]+~freqAdd2).midicps, 1),
+		], inf),
+		\freq3, Pseq([
+			Pseq(([90]+~freqAdd3).midicps, 1),
+		], inf),
+		\freq4, Pseq(([~freq4]).midicps, inf),
+		\delta, Pseq([
+			Pseq([0.25], 1),
+		], inf),
+		// \sn, Pseq((80..8), 1),
+		\sn, Pseq([
+			// Pseq(([100]).midicps, 8*2),
+			// Pseq(([60]).midicps, 8*2),
+			// Pseq(([50]).midicps, 8*2),
+			Pseq(([1]).midicps, 8*2),
 		], inf),
 		\amp, ~amp_mor_a
 
 	)
 ).quant_(0).play;
+)
+
 // 112.midicps
 // 115.midicps
 // 110.midicps
@@ -541,11 +465,39 @@ Cue: 중세 오르간 음악은 태이씨 의자 올라와서 망원경 다 펴�
 // 160.midicps%s.sampleRate
 // 80.midicps%s.sampleRate
 
+(// sf 느낌
+~amp_mor_a = 0.3;
+~freqAdd = 3;
+~freq4 = 112;
+
+~c3 = Pdef(\seq_mor_3,
+	Pbind(
+		\instrument, \sori,
+		\dur, Pseq([
+			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
+			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 44, 44]+~freqAdd).midicps, 1),
+			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd).midicps, 1),
+		], inf),
+		\freq4, Pseq(([~freq4]).midicps, inf),
+		\delta, Pseq([
+			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
+			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+		], inf),
+		\amp, ~amp_mor_a
+
+	)
+).quant_(0).play;
+
+
 ~c2 = Pdef(\seq_mor_2,
 	Pbind(
 		\instrument, \sori,
 		\dur, Pseq([
-			Pseq([0.25], 1),
+			// Pseq([Rest(0.25)], 7*8),
+			Pseq([0.25], inf),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 2, 2], 1),
 		], inf),
 		\freq, Pseq([
@@ -567,7 +519,7 @@ Cue: 중세 오르간 음악은 태이씨 의자 올라와서 망원경 다 펴�
 		\delta, Pseq([
 			Pseq([0.25], 1),
 		], inf),
-		\amp, ~amp_mor_a/3
+		\amp, ~amp_mor_a/5
 
 	)
 ).quant_(0).play;
