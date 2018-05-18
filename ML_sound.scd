@@ -1,6 +1,50 @@
 2막 꼬이는 부분 음악 없다
 
+//change tempo
+TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 
+
+(
+Buffer.freeAll;
+
+// prepare buffer
+~path_ = "/Users/giy/Library/Mobile Documents/com~apple~CloudDocs/2018_06_ml/audio_sample/";
+
+~buf_intro = Buffer.read(s, ~path_ ++ "0_major_interview.wav");
+
+~buf_mozart = Buffer.read(s, ~path_++"1_1_mozart.wav");
+~buf_beethoven = Buffer.read(s, ~path_++"1_2_beethoven.wav");
+~buf_sari = Buffer.read(s, ~path_++"1_3_sari.wav");
+
+~buf_homeShopping = Buffer.read(s, ~path_++"2_1_shopping.wav");
+~buf_handaesoo = Buffer.read(s, ~path_++"2_2_handaesoo.wav");
+~buf_cello = Buffer.read(s, ~path_++"2_3_cello.wav");
+~buf_bts = Buffer.read(s, ~path_++"2_4_bts.wav");
+
+);
+
+~dd = Buffer.loadDialog;
+~dd.play;
+
+~buf_intro.play;
+~buf_intro.free;
+~buf_intro.release(3.0);
+~buf_intro.stop;
+
+
+
+(
+x = SynthDef(\play_Buffer, { arg out = 0, bufnum;
+    Out.ar( out,
+        PlayBuf.ar(2, bufnum, BufRateScale.kr(bufnum))
+    )
+}).play(s,[\bufnum, ~buf_intro]);
+)
+
+
+x;
+x.release(3.0);
+x.free
 
 
 
@@ -206,7 +250,7 @@ Synth(\ddd);
 
 
 //change tempo
-TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
+TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 
 
 // ======================================= Lang side Sequence ===========================================
@@ -343,13 +387,21 @@ Pdef(\seq1,
 ~p2.play;
 ~p3.play;
 
+
+정아씨 판서 점 찍을 때 중세 음악과 오버랩,
+
+(
 ~p1.stop;
 ~p2.stop;
 ~p3.stop;
 ~m1.play;
 ~m2.play;
+~m3.play;
+~m4.play;
+)
 
-정아씨 판서 점 찍을 때 중세 음악과 오버랩,
+
+
 
 
 (// 2. 중세 오르간
