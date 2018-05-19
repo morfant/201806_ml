@@ -273,7 +273,15 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 
+~m1.play;
+~m3.play;
+~m3.stop;
+~m3.play;
 
+
+~m3.stop;
+~m4.stop;
+~m3.play;
 
 (// 2. 중세 오르간
 ~fadeOutTime = 6.0;
@@ -283,8 +291,9 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 	Pbind(
 		\instrument, \liedR,
 		\freq, Pseq([
-			Pseq(([49, 54, 53]).midicps, 4),
+			// Pseq(([49, 54, 53]).midicps, 4),
 			Pseq(([51, 56, 55]).midicps, 4),
+			Pseq(([49, 54, 53]).midicps, 4),
 		], inf),
 		\dur, Pseq([0.1, 0.2, 0.5, 0.2, 1.4, 0.1], inf),
 		\delta, Pseq([0.5], inf),
@@ -298,13 +307,17 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 	Pbind(
 		\instrument, \liedR,
 		\freq, Pseq([
-			Pseq(([0, 67, 69, 71, 62, 66, 67, 69]-4+12).midicps, 1),
+			Pseq(([0, 67, 69, 71, 62, 66, 67, 69]+8).midicps, 1),
+			// Pseq(([55, #[67, 59], #[69, 59], #[71, 55], #[62, 53], 66, #[67, 55], #[69, 53]]+8).midicps, 1),
+			Pseq(([55, #[59], #[59], #[55], #[53], 55, #[55], #[53]]+8).midicps, 1),
 		], inf),
 
-		\atk, 0.3,
-		\dur, Pseq([Rest(2.5), 0.5, 1.5, 1.5, 2.5, 0.5, 1.5, 1.5], inf),
-		\delta, Pseq([Rest(2.5), 0.5, 1.5, 1.5, 2.5, 0.5, 1.5, 1.5], inf),
-		\amp, Pseq([0, 0.2, 0.24, 0.3, 0.24, 0.17, 0.22, 0.3]*0.4, inf),
+		\atk, 0.7,
+		// \dur, Pseq([Rest(2.5), 0.5, 1.5, 1.5, 2.5, 0.5, 1.5, 1.5], inf),
+		\dur, Pseq([(2.5), 0.5, 1.5, 1.5, 2.5, 0.5, 1.5, 1.5], inf),
+		// \delta, Pseq([Rest(2.5), 0.5, 1.5, 1.5, 2.5, 0.5, 1.5, 1.5], inf),
+		\delta, Pseq([(2.5), 0.5, 1.5, 1.5, 2.5, 0.5, 1.5, 1.5], inf),
+		\amp, Pseq([0.22, 0.2, 0.24, 0.3, 0.24, 0.17, 0.22, 0.3]*0.8, inf),
 	)
 ).quant_(6);
 ~m2.fadeTime = ~fadeOutTime;
@@ -314,8 +327,9 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 	Pbind(
 		\instrument, \liedR,
 		\freq, Pseq([
-			Pseq(([66, 73, 73, 73, 73]-10).midicps, 1),
+			// Pseq(([66, 73, 73, 73, 73]-10).midicps, 1),
 			Pseq(([66, 73, 73, 73, 73]-8).midicps, 1),
+			Pseq(([66, 73, 73, 73, 73]-10).midicps, 1),
 			// Pseq(([[66, 64], 73, 73, 73, 73]-12).midicps, 1),
 			// Pseq(([[66, 62], 73, 73, 73, 73]-12).midicps, 1),
 			// Pseq(([[66, 64], 73, 73, 73, 73]-12).midicps, 1)
@@ -325,7 +339,7 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 		\dur, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 3], inf), // 박이 끝나는 부분이 일치
 		\delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 3], inf), // 박이 끝나는 부분이 일치
 		// \delta, Pseq([2.5, 0.25, 0.25/2, 0.25/2, 1.5], inf), // 박이 끝나는 부분이 불일치, 페이즈 음악, 돌림노래 같은 느낌
-		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 0.9]*0.4, inf),
+		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 0.9]*0.2, inf),
 	)
 ).quant_(6);
 ~m3.fadeTime = ~fadeOutTime;
@@ -335,21 +349,27 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 	Pbind(
 		\instrument, \liedR,
 		\freq, Pseq([
+			// Pseq(([41]-16).midicps, 4),
+			Pseq(([43]-16).midicps, 4),
 			Pseq(([41]-16).midicps, 4),
-			Pseq(([43]-16).midicps, 4)
+			Pseq(([43]-16).midicps, 4),
+			Pseq(([41, 41, 41, 41, 39, 41]-16).midicps, 1),
 		], inf),
 
 		\atk, 0.1,
 		\dur, Pseq([0.3], inf),
-		\delta, Pseq([1.5], inf),
-		\amp, Pseq([0.3], inf),
+		\delta, Pseq([
+			Pseq([1.5], 15),
+			Pseq([0.5], 3)
+		], inf),
+		\amp, Pseq([0.2], inf),
 	)
 ).quant_(6);
 ~m4.fadeTime = ~fadeOutTime;
 
 );
 
-
+~m4.play;
 
 (// play all
 ~m1.play;~m2.play;~m3.play;~m4.play;
