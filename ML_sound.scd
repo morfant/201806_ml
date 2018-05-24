@@ -2,6 +2,7 @@
 //TODO
 - 모던에서 일정한 박자 소리가 좀 더 잘 들리게. (?)
 - 여자의 정원 편집본으로 대체
+
 - 코카콜라?
 - 으르렁대 음원 편집: 중간엔 비트만 나온다든지 하는 변형이 필요하다
 - 통일 / 엄마(사랑?) 주제 음악
@@ -505,25 +506,50 @@ c = Pbind(
 // 찰칵찰칵? - 개념 무용?
 //ambient
 (
+~spdDiv = 4;
 
-Pdef(\ddd,
+~dd1 = Pdef(\ddd,
 	Pbind(
         \instrument,        \chal,
 		\freq, Pseq([
-			Pseq(([55, 65, 77, 34, 90, 24, 10, 40, 80]).midicps, 3),
-			Pseq(([#[90, 20], 80, 90, 90, #[80, 30], 80, 90, 80, #[70, 100], #[80, 10], 90, 80, 70]).midicps, 1),
+			Pseq(([55, 65, 77, 34, 90, 24, 10, 40, 80]*0.8).midicps, 3),
+			// Pseq(([#[20], 80, 90, 90, #[30], 80, 90, 80, #[100], #[80], 90, 80, 70]/2).midicps, 1),
 		], inf),
         \dur, Pseq([
-			Pseq([4, 2, 1, 5, 1, 2, 0.4, 0.2, 0.5]/4, 3),
-			Pseq([1, 1, 1, 1,  1, 1, 1, 1,  1, 2, 1,  1, 4]/4, 1),
+			Pseq([4, 2, 1, 5, 1, 2, 0.4, 0.2, 0.5]/~spdDiv, 3),
+			// Pseq([1, 1, 1, 1,  1, 1, 1, 1,  1, 2, 1,  1, 4]/~spdDiv, 1),
 		], inf),
-		\degree,            Pseq( [1, 2, 7, 2, 22, 39, 44]/148, inf),
-        \amp,               1.0,
-		\freqBase, 80,
+		// \degree,            Pseq( [1, 2, 7, 2, 22, 39, 44]/148, inf),
+        \amp,               0.4,
+		\freqBase, Pseq(([20]), inf),
 		\freqAmp, 0.1,
+		\decay, 0.5
 
     )
 ).play;
+
+~dd2 = Pdef(\ddd2,
+	Pbind(
+        \instrument,        \chal,
+		\freq, Pseq([
+			// Pseq(([55, 65, 77, 34, 90, 24, 10, 40, 80]*0.8).midicps, 3),
+			Pseq(([#[20], 80, 90, 90, #[30], 80, 90, 80, #[100], #[80], 90, 80, 70]/2).midicps, 1),
+		], inf),
+        \dur, Pseq([
+			// Pseq([4, 2, 1, 5, 1, 2, 0.4, 0.2, 0.5]/~spdDiv, 3),
+			Pseq([1, 1, 1, 1,  1, 1, 1, 1,  1, 2, 1,  1, 4]/~spdDiv, 1),
+		], inf),
+		// \degree,            Pseq( [1, 2, 7, 2, 22, 39, 44]/148, inf),
+        \amp,               0.4,
+		\freqBase, Pseq(([20]), inf),
+		\freqAmp, 0.1,
+		\decay, 0.5
+
+    )
+).play;
+
+
+
 )
 
 
@@ -604,9 +630,9 @@ p.stream = Pbind(
 
 // 질문 후에 반복 음악 : 점점 반복 주기 짧아지2
 
-	a = Synth("help-TCoin", [\freq, 10, \freq_am, 9, \amp, 0.3]);
-	a.set(\freq, 9, \freq_am, 9, \amp, 0.3);
-	a.set(\freq, 10, \freq_am, 9, \amp, 0.3);
+	a = Synth("help-TCoin", [\freq, 210, \freq_am, 9, \amp, 0.3]);
+	a.set(\freq, 300, \freq_am, 21, \amp, 0.3);
+	a.set(\freq, 400, \freq_am, 9, \amp, 0.3);
 	a.set(\freq, 9, \freq_am, 9, \amp, 0.3);
 	a.set(\freq, 13, \freq_am, 9, \amp, 0.3);
 
