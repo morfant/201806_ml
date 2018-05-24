@@ -20,17 +20,28 @@ Buffer.freeAll;
 ~buf_cello = Buffer.read(s, ~path_++"2_3_cello.wav");
 ~buf_bts = Buffer.read(s, ~path_++"2_4_bts.wav");
 
-);
-
-
-( // synthdef
-SynthDef(\play_buffer, { arg out = 0, bufnum, gate = 1, susLevel = 0.8, amp = 0.8;
+// synthdef
+SynthDef(\play_buffer, { arg t_trig = 0, out = 0, bufnum, gate = 1, susLevel = 0.8, amp = 0.8, start = 0;
     Out.ar( out,
-		PlayBuf.ar(2, bufnum, BufRateScale.kr(bufnum))
+		PlayBuf.ar(2, bufnum, BufRateScale.kr(bufnum), startPos: start)
 		* EnvGen.kr(Env.adsr(sustainLevel: susLevel), gate, doneAction: 2) * amp;
     )
-}, [0, 0, 0, 0, 6.0]).add;
+}, [0, 0, 0, 0, 0, 10, 0]).add;
 )
+
+// argument rate test
+(
+SynthDef(\tt, {|amp = 1.0, freq = 300|
+	var sig = WhiteNoise.ar(amp);
+	var sig2 = SinOsc.ar(freq, mul: amp);
+	Out.ar(0, Pan2.ar(sig2, 0, 1));
+}, [20, 20]).add;
+)
+
+a = Synth(\tt);
+a.set(\amp, 0.0);
+a.set(\amp, 1.0);
+a.set(\freq, 100);
 
 
 
