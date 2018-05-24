@@ -24,25 +24,48 @@ Buffer.freeAll;
 
 
 ( // synthdef
-SynthDef(\play_buffer, { arg out = 0, bufnum, gate = 1, susLevel = 0.8;
+SynthDef(\play_buffer, { arg out = 0, bufnum, gate = 1, susLevel = 0.8, amp = 0.8;
     Out.ar( out,
 		PlayBuf.ar(2, bufnum, BufRateScale.kr(bufnum))
-		* EnvGen.kr(Env.adsr(sustainLevel: susLevel), gate, doneAction: 2);
+		* EnvGen.kr(Env.adsr(sustainLevel: susLevel), gate, doneAction: 2) * amp;
     )
-}).add;
+}, [0, 0, 0, 0, 6.0]).add;
 )
 
 
 
 // play buffer
-~syn_buf_intro = Synth.new(\play_buffer, [\bufnum, ~buf_intro]);
-~syn_buf_mozart = Synth.new(\play_buffer, [\bufnum, ~buf_mozart]);
-~syn_buf_beethoven = Synth.new(\play_buffer, [\bufnum, ~buf_beethoven]);
-~syn_buf_sari = Synth.new(\play_buffer, [\bufnum, ~buf_sari]);
-~syn_buf_shopping = Synth.new(\play_buffer, [\bufnum, ~buf_shopping]);
-~syn_buf_handaesoo = Synth.new(\play_buffer, [\bufnum, ~buf_handaesoo]);
-~syn_buf_cello = Synth.new(\play_buffer, [\bufnum, ~buf_cello]);
-~syn_buf_bts = Synth.new(\play_buffer, [\bufnum, ~buf_bts]);
+~syn_buf_intro = Synth.new(\play_buffer, [\bufnum, ~buf_intro, \amp, 0.8]);
+~syn_buf_intro.set(\amp, 0.2);
+~syn_buf_intro.release(0.3);
+
+~syn_buf_mozart = Synth.new(\play_buffer, [\bufnum, ~buf_mozart, \amp, 0.8]);
+~syn_buf_mozart.set(\amp, 0.2);
+~syn_buf_mozart.release(0.3);
+
+~syn_buf_beethoven = Synth.new(\play_buffer, [\bufnum, ~buf_beethoven, \amp, 0.8]);
+~syn_buf_beethoven.set(\amp, 0.2);
+~syn_buf_beethoven.release(0.3);
+
+~syn_buf_sari = Synth.new(\play_buffer, [\bufnum, ~buf_sari, \amp, 0.8]);
+~syn_buf_sari.set(\amp, 0.2);
+~syn_buf_sari.release(0.3);
+
+~syn_buf_shopping = Synth.new(\play_buffer, [\bufnum, ~buf_shopping, \amp, 0.8]);
+~syn_buf_shopping.set(\amp, 0.2);
+~syn_buf_shopping.release(0.3);
+
+~syn_buf_handaesoo = Synth.new(\play_buffer, [\bufnum, ~buf_handaesoo, \amp, 0.8]);
+~syn_buf_handaesoo.set(\amp, 0.2);
+~syn_buf_handaesoo.release(0.3);
+
+~syn_buf_cello = Synth.new(\play_buffer, [\bufnum, ~buf_cello, \amp, 0.8]);
+~syn_buf_cello.set(\amp, 0.2);
+~syn_buf_cello.release(0.3);
+
+~syn_buf_bts = Synth.new(\play_buffer, [\bufnum, ~buf_bts, \amp, 0.8]);
+~syn_buf_bts.set(\amp, 0.2);
+~syn_buf_bts.release(0.3);
 
 
 // stop or release
