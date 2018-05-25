@@ -166,7 +166,7 @@ SynthDef(\chal, {| out, amp = 0.03, freq = 100, decay = 0.01, pos = 0, freqBase 
 
 
 // Synthdef 8
-SynthDef("help-TCoin", { arg out=0, prob=0.5, freq = 20, freq_am = 0.5, amp = 0.2;
+SynthDef("help-TCoin_ori", { arg out=0, prob=0.5, freq = 20, freq_am = 0.5, amp = 0.2;
 	var trig;
 	trig = Impulse.ar(freq, 0, SinOsc.kr(freq_am,0,1,1));
 	// trig = Impulse.ar(SinOsc.kr(0.01, 0, freq+100, freq+300), 0, SinOsc.kr(freq_am,0,1,1));
@@ -177,6 +177,17 @@ SynthDef("help-TCoin", { arg out=0, prob=0.5, freq = 20, freq_am = 0.5, amp = 0.
 	)
 }).add;
 
+SynthDef("help-TCoin", { arg out=0, prob=0.5, freq = 20, freq_am = 0.5, amp = 0.2, gate = 1;
+	var trig, env;
+	env = EnvGen.kr(Env.perc, gate, doneAction: 2);
+	trig = Impulse.ar(freq, 0, SinOsc.kr(freq_am,0,1,1));
+	// trig = Impulse.ar(SinOsc.kr(0.01, 0, freq+100, freq+300), 0, SinOsc.kr(freq_am,0,1,1));
+	Out.ar(out,
+		// Mix.fill(3, {Ringz.ar(CoinGate.ar(prob, trig*0.5), #[1,1.5, 2, 4]*Rand(50, 90), 0.01)})*amp
+		SinOsc.ar(#[1, 1.5, 3]*freq)*amp*env
+
+	)
+}).add;
 
 SynthDef(\sori,
 	{
