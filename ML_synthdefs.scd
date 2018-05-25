@@ -132,7 +132,7 @@ SynthDef(\woonglong,
         var sig, fil, lfo, env;
 
         env = EnvGen.kr(Env.asr(1.3, 1, 3), gate, doneAction: 2);
-        sig = Saw.ar([50, 75], 1);
+        sig = Saw.ar(#[50, 75], 1);
         fil = RLPF.ar(sig, cutoff, rq);
         Out.ar(0, fil * env * amp);
     }

@@ -1,11 +1,11 @@
-2막 꼬이는 부분 음악 없다
+
 //TODO
 - 모던에서 일정한 박자 소리가 좀 더 잘 들리게. (?)
 - 여자의 정원 편집본으로 대체
+- A/B 음악
 
 - 코카콜라?
 - 으르렁대 음원 편집: 중간엔 비트만 나온다든지 하는 변형이 필요하다
-- 통일 / 엄마(사랑?) 주제 음악
 - 펩시맨을 대신할 음악
 - 개념 무용 음악
 - 커튼콜 음악
@@ -451,9 +451,11 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 // 으르렁에서 홈쇼핑 음악으로 오버랩
 (
+// 아래 세 줄 순차 실행
 ~syn_buf_shopping = Synth.new(\play_buffer, [\bufnum, ~buf_shopping, \amp, 0.0]);
 ~syn_buf_bts.release(3.0);
 ~syn_buf_shopping.set(\amp, 0.6); // <<
+
 ~syn_buf_shopping.set(\amp, 0.1); // >>
 ~syn_buf_shopping.release(4.0);
 )
@@ -464,9 +466,10 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 // 홈쇼핑 중간부터 : "완판" 됐습니다!
-// 음악 중간 부터 다시 나온다.
+// 음악 중간 부터 다시 나온다. - 아래 두 줄 순차 실행
 ~syn_buf_shopping = Synth.new(\play_buffer, [\bufnum, ~buf_shopping, \start, s.sampleRate * 20, \amp, 0.0]);
 ~syn_buf_shopping.set(\amp, 0.5);
+
 ~mic = Synth(\micin, [\amp, 1.0]);
 ~syn_buf_shopping.set(\amp, 0.1);
 ~syn_buf_shopping.release(4.0);
