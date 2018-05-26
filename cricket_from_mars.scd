@@ -298,7 +298,7 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 var ampMul = 1;
 
-~key_con_add = -12;
+~key_con_add = 0;
 ~fadeOutTime_con = 4.0;
 
 ~con = Pdef(\seq_concept_1,
