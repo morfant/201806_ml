@@ -8,6 +8,17 @@ SynthDef(\gobeat, {|freq = 240, dur = 0.2, gate = 1, amp = 0.5|
 	Out.ar(0, Pan2.ar(sig)*amp);
 }).add;
 
+
+// conceptual dance
+SynthDef(\condan, {|freq = 240, dur = 0.2, gate = 1, amp = 0.5, freq2 = 33, amp2 = 0.5|
+	var env = EnvGen.kr(Env.perc(0.01, dur), gate, doneAction: 2);
+	var sig2 = LFSaw.kr(freq2, mul: amp2);
+	var sig = SinOsc.ar(freq, mul: env*sig2);
+
+	Out.ar(0, Pan2.ar(sig)*amp);
+}).add;
+
+
 SynthDef(\sine, {|freq = 240, dur = 0.2, gate = 1, atk = 0.1, amp = 0.5|
 	// var env = EnvGen.kr(Env.perc(atk, dur), gate, doneAction: 2);
 	var env = Line.kr(0.2, 0.0, dur, doneAction:2);

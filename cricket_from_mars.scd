@@ -182,9 +182,9 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 ~g1 = Pdef(\seq_game_1,
 	Pbind(
-		// \instrument, \gobeat,
+		\instrument, \gobeat,
 		// \instrument, \lfp,
-		\instrument, "help-TCoin",
+		// \instrument, "help-TCoin",
 		\dur, Pseq([
 			Pseq([1, 1, 1, 1, 1, 1, 1, 1]*0.7, 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
@@ -294,3 +294,44 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 
+(// 개념 무용
+
+var ampMul = 1;
+
+~key_con_add = -12;
+~fadeOutTime_con = 4.0;
+
+~con = Pdef(\seq_concept_1,
+	Pbind(
+		// \instrument, \gobeat,
+		\instrument, \condan,
+		// \instrument, "help-TCoin",
+		\dur, Pseq([
+			Pseq([1, 1/2, 1*3/2, 1, 1]/4, 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([65, 68, 59, #[71, 68], #[69, 66]]+~key_con_add).midicps, 1),
+			Pseq(([65, 68, 59, #[71, 68], #[69, 66]]+~key_con_add-2).midicps, 1),
+			Pseq(([65, 68, 59, #[71, 66], #[69, 66]]+~key_con_add+5).midicps, 1),
+			Pseq(([65, 68, 59, #[71, 66], #[69, 66]]+~key_con_add-3).midicps, 1),
+		], inf),
+		\delta, Pseq([
+			Pseq([1/32, 1, 1, 1, 1]*2/3, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+		], inf),
+		\amp, Pseq([0.2, 0.4, 0.4, 0.4, 0.32]*ampMul, inf),
+		\amp2, 0.1,
+		\freq2, 800,
+
+	)
+).quant_(0).play;
+~con.fadeTime = ~fadeOutTime_con;
+
+
+)
+
+(// fadeout
+~con = Pdef(\seq_concept_1, Pbind(\instrument, \condan, \amp, 0)).play;
+)
+
+~con.stop;

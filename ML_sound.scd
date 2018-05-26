@@ -344,8 +344,43 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 // ).quant_(4).play;
 ).quant_(0).play;
 ~c3.fadeTime = ~fadeOutTime_mod;
+
+
 )
 
+
+
+(
+
+~keyaaa = 6;
+// base rytm
+~c4 = Pdef(\seq_mod_4,
+	Pbind(
+		// \instrument, \sori,
+		\instrument, \gobeat,
+		\dur, Pseq([
+			Pseq([1, 1/2, 1*3/2, 1, 1], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([65, 68, 59, #[71, 68], #[69, 66]]+~keyaaa).midicps, 1),
+			// Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd).midicps, 1),
+		], inf),
+		// \freq4, Pseq(([~freq4]).midicps, inf),
+		\delta, Pseq([
+			Pseq([1/32, 1, 1, 1, 1]/3, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+		], inf),
+		\amp, Pseq([0.2, 0.4, 0.4, 0.4, 0.32], inf),
+		// \amp, 0.5
+
+	)
+// ).quant_(4).play;
+	).quant_(0).play;
+// ~c3.fadeTime = ~fadeOutTime_mod;
+
+
+)
 
 // modern stop : 5분간 인터미션이 있겠습니다 후 조명 나가고 나서 페이드 아웃
 // fadeout : fadetime은 'ML_patterns' 에서 set
