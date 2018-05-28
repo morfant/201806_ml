@@ -10,6 +10,9 @@ Buffer.freeAll;
 ~path_ = "/Users/giy/Library/Mobile Documents/com~apple~CloudDocs/2018_06_ml/audio_sample/";
 
 ~buf_intro = Buffer.read(s, ~path_ ++ "0_major_interview.wav");
+~buf_voice_haerim = Buffer.read(s, ~path_ ++ "0_1_interview_haerim.wav");
+~buf_voice_taei = Buffer.read(s, ~path_ ++ "0_2_interview_taei.wav");
+~buf_outtro_end = Buffer.read(s, ~path_ ++ "0_4_interview_all.wav");
 
 ~buf_mozart = Buffer.read(s, ~path_++"1_1_mozart.wav");
 ~buf_beethoven = Buffer.read(s, ~path_++"1_2_beethoven.wav");
@@ -32,12 +35,14 @@ SynthDef(\play_buffer, { arg t_trig = 0, out = 0, bufnum, gate = 1, susLevel = 0
 // synthdef - modi
 SynthDef(\play_buffer_m, {
 	arg t_trig = 0, out = 0, bufnum, gate = 1, susLevel = 0.8,
-	amp = 0.8, start = 0, spd = 4, atk = 1, rel = 2, curv = -4, rate = 1;
-	var trig;
+	amp = 0.8, start = 0, spd = 4, atk = 1, rel = 2, curv = -4, rate = 1,
+	fil_freq = 200, rq = 0.6;
+	var trig, fil;
 	// trig = Impulse.kr(10, mul: 0.5, add: 0.5);
 	trig = LFPulse.kr(spd);
     Out.ar( out,
-		PlayBuf.ar(2, bufnum, rate*BufRateScale.kr(bufnum), startPos: start, trigger: trig)
+			RLPF.ar(
+				PlayBuf.ar(2, bufnum, rate*BufRateScale.kr(bufnum), startPos: start, trigger: trig), fil_freq, rq)
 		// * EnvGen.kr(Env.perc(atk, rel, curv), gate, doneAction: 2) * amp;
 		* EnvGen.kr(Env.adsr(sustainLevel: susLevel), gate, doneAction: 2) * amp;
     )
@@ -70,6 +75,18 @@ a.set(\freq, 100);
 ~syn_buf_intro = Synth.new(\play_buffer, [\bufnum, ~buf_intro, \amp, 0.8]);
 ~syn_buf_intro.set(\amp, 0.2);
 ~syn_buf_intro.release(0.3);
+
+~syn_buf_voice_haerim = Synth.new(\play_buffer, [\bufnum, ~buf_voice_haerim, \amp, 0.8]);
+~syn_buf_voice_haerim.set(\amp, 0.2);
+~syn_buf_voice_haerim.release(0.3);
+
+~syn_buf_voice_taei = Synth.new(\play_buffer, [\bufnum, ~buf_voice_taei, \amp, 1.0]);
+~syn_buf_voice_taei.set(\amp, 0.2);
+~syn_buf_voice_taei.release(0.3);
+
+~syn_buf_outtro_end = Synth.new(\play_buffer, [\bufnum, ~buf_interview_end, \amp, 2.0]);
+~syn_buf_outtro_end.set(\amp, 0.2);
+~syn_buf_outtro_end.release(0.3);
 
 ~syn_buf_mozart = Synth.new(\play_buffer, [\bufnum, ~buf_mozart, \amp, 0.8]);
 ~syn_buf_mozart.set(\amp, 0.2);

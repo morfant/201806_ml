@@ -32,6 +32,9 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 (// 고대 시작 - Pdef set 하는 방법을 알아 볼것 : 많은 것들을 포함했다. 듣고 go
+
+// 인트로에서 민하씨가 "~에서 ~를 빼면" 하면 고대 음악 go, 조명 암전
+// 혜림씨 탑 조명 들어오고 모내기 3번 하고 나면 '농협' 인터뷰 go
 TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 ~amp_anc_a = 0.1/2;
 ~amp_anc_b = 0.2/2;
@@ -91,8 +94,15 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 )
 
+// 혜림씨 농협 인터뷰
+~syn_buf_voice_haerim = Synth.new(\play_buffer, [\bufnum, ~buf_voice_haerim, \amp, 0.5]);
+~syn_buf_voice_haerim.set(\amp, 0.4);
+~syn_buf_voice_haerim.release(0.3);
+
+
 
 (// 혜림씨 돌아서서 모내기 6개 뽑으면 전환
+// 무용수들 모두 고대 옷 벗고 월계관 벗어 놓고 서면 중세로 전환
 ~p1.stop;
 ~p2.stop;
 ~p3.stop;
@@ -347,6 +357,11 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 )
+
+// 나레이션 추가
+~syn_buf_outtro_end = Synth.new(\play_buffer, [\bufnum, ~buf_interview_end, \amp, 2.0]);
+~syn_buf_outtro_end.set(\amp, 0.2);
+~syn_buf_outtro_end.release(0.3);
 
 
 //c3을 없애고 새로운 것 추가?
