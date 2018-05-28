@@ -349,6 +349,10 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 )
 
 
+//c3을 없애고 새로운 것 추가?
+~c3 = Pdef(\seq_mod_3, Pbind(\amp, 0)).play;
+
+
 
 (// 민씨 앞으로 나올때부터 추가되는 사운드
 

@@ -27,7 +27,28 @@ SynthDef(\play_buffer, { arg t_trig = 0, out = 0, bufnum, gate = 1, susLevel = 0
 		* EnvGen.kr(Env.adsr(sustainLevel: susLevel), gate, doneAction: 2) * amp;
     )
 }, [0, 0, 0, 0, 0, 10, 0]).add;
+
+
+// synthdef - modi
+SynthDef(\play_buffer_m, {
+	arg t_trig = 0, out = 0, bufnum, gate = 1, susLevel = 0.8,
+	amp = 0.8, start = 0, spd = 4, atk = 1, rel = 2, curv = -4, rate = 1;
+	var trig;
+	// trig = Impulse.kr(10, mul: 0.5, add: 0.5);
+	trig = LFPulse.kr(spd);
+    Out.ar( out,
+		PlayBuf.ar(2, bufnum, rate*BufRateScale.kr(bufnum), startPos: start, trigger: trig)
+		// * EnvGen.kr(Env.perc(atk, rel, curv), gate, doneAction: 2) * amp;
+		* EnvGen.kr(Env.adsr(sustainLevel: susLevel), gate, doneAction: 2) * amp;
+    )
+}, [0, 0, 0, 0, 0, 10, 0]).add;
+
+
 )
+
+
+
+
 
 // argument rate test
 (
