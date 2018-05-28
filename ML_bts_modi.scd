@@ -15,7 +15,7 @@
 //bts
 TempoClock.default.tempo_(40/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 
-~mix = Pdef(\seq_mix,
+~ululung = Pdef(\seq_uuu,
 	Pbind(
 		\instrument, \play_buffer_m,
 		\bufnum, ~buf_bts,
@@ -34,7 +34,10 @@ TempoClock.default.tempo_(40/60); // 기본 시계라고 생각하면 된다. 1.
         \amp, 0.3,
 
 	)
-// ).quant_(4).play;
-	).quant_(0).play;
+).quant_(0).play;
+~ululung.fadeTime = 3.0;
 
 )
+
+// fadeout
+~ululung = Pdef(\seq_uuu, Pbind(\amp, 0)).play;
