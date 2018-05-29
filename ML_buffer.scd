@@ -14,6 +14,7 @@ Buffer.freeAll;
 ~buf_voice_taei = Buffer.read(s, ~path_ ++ "0_2_interview_taei.wav");
 ~buf_voice_ch = Buffer.read(s, ~path_ ++ "0_3_interview_ch.wav");
 ~buf_outtro_end = Buffer.read(s, ~path_ ++ "0_4_interview_all.wav");
+~buf_outtro_end_wave = Buffer.read(s, ~path_ ++ "0_4_interview_all_wave.wav");
 
 ~buf_mozart = Buffer.read(s, ~path_++"1_1_mozart.wav");
 ~buf_beethoven = Buffer.read(s, ~path_++"1_2_beethoven.wav");
@@ -90,9 +91,12 @@ a.set(\freq, 100);
 ~syn_buf_voice_ch.release(0.3);
 
 
-~syn_buf_outtro_end = Synth.new(\play_buffer, [\bufnum, ~buf_outtro_end, \amp, 2.0]);
+// ~syn_buf_outtro_end = Synth.new(\play_buffer, [\bufnum, ~buf_outtro_end, \amp, 2.0]);
+~syn_buf_outtro_end = Synth.new(\play_buffer, [\bufnum, ~buf_outtro_end_wave, \amp, 2.0]);
 ~syn_buf_outtro_end.set(\amp, 0.2);
 ~syn_buf_outtro_end.release(0.3);
+
+
 
 ~syn_buf_mozart = Synth.new(\play_buffer, [\bufnum, ~buf_mozart, \amp, 0.8]);
 ~syn_buf_mozart.set(\amp, 0.2);

@@ -1,10 +1,10 @@
 a = Synth(\sori, [\freq, 108.midicps, \amp, 0.2]);
 
 (
-
+// 무용수가 완전히 준비가 되면 튼다
 //music A
 TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
-
+~amp_music_a = 1.2;
 ~music_A = Pdef(\seq_music_a,
 	Pbind(
 		\instrument, \woong,
@@ -28,19 +28,19 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 			], inf),
 		// \freq4, Pseq(([~freq4]).midicps, inf),
 		\delta, Pseq([
-						Pseq([1, 1, 1, 1]/9, 1),
+						Pseq([1, 1, 1, 1]/, 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
 			], inf),
 		// \sn, Pseq((80..8), 1),
 		// \sn, 100,
-		\sn, 8,
-		// \sn, Pseq([8, 100, 8, 8, 800, Prand([500, 300, 2], 1), 8, 8], inf),
-		\amp, 0.9,
+		// \sn, 8,
+		\sn, Pseq([8, 100, 8, 8, 800, Prand([500, 300, 2], 1), 8, 8], inf),
+		\amp, 0.9*~amp_music_a,
 		// \cutoff, 400,
 		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 2000], inf),
 		\cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 1500], inf),
-		\rq, 0.5
+		\rq, 0.9
 
 	)
 // ).quant_(4).play;
@@ -48,11 +48,12 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 )
 
-
+// 3분간 퍼포밍 끝나고 암전되면 커튼콜 음악
 
 //music B
 (
 TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
+~amp_music_b = 1.2;
 
 ~music = Pdef(\seq_long,
 	Pbind(
@@ -70,7 +71,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
 			], inf),
-		\amp, 1.0,
+		\amp, 1.0*~amp_music_b,
 		// \cutoff, 400,
 		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 2000], inf),
 		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 1500], inf),
@@ -102,7 +103,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
 			], inf),
-		\amp, 0.2/2/2,
+		\amp, 0.2/2/2*~amp_music_b,
 		// \amp, 0,
 		// \cutoff, 400,
 		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 2000], inf),
@@ -140,7 +141,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
 			], inf),
-		\amp, 0.03/2,
+		\amp, 0.03/2*~amp_music_b,
 		// \cutoff, 400,
 		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 2000], inf),
 		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 1500], inf),
@@ -158,12 +159,10 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 
-
 )
 
 
-(
-
+(// 혜림씨 끝나면 음악 먼저
 // game bgm
 TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 ~div = 4;
@@ -174,10 +173,10 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 ~fadeOutTime_game = 2.0;
 
 
-
-~amp_game_b = 0.25;
-~amp_game_c = ~amp_game_b - 0.05;
-~amp_game_a = ~amp_game_b - 0.15;
+~amp_game = 0.6;
+~amp_game_b = ~amp_game*0.25;
+~amp_game_c = ~amp_game*~amp_game_b - 0.05;
+~amp_game_a = ~amp_game*~amp_game_b - 0.15;
 // ~amp_game_a = ~amp_game_b = ~amp_game_c = 0;
 
 ~g1 = Pdef(\seq_game_1,
@@ -206,7 +205,7 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 	)
 // ).quant_(4).play;
-).quant_(0).play;
+).quant_(0);
 // ~g1.fadeTime = ~fadeOutTime_game;
 
 ~g2 = Pdef(\seq_game_2,
@@ -235,7 +234,7 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 	)
 // ).quant_(4).play;
-).quant_(0).play;
+).quant_(0);
 ~g2.fadeTime = ~fadeOutTime_game;
 
 
@@ -269,11 +268,14 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 	)
 // ).quant_(4).play;
-	).quant_(0).play;
+	).quant_(0);
 ~g3.fadeTime = ~fadeOutTime_game;
+
+~g1.play;~g2.play;~g3.play;
 
 )
 
+// 두번째 라운드 사운드 대결 준비 해야 함.
 
 (// fade out
 ~g1 = Pdef(\seq_game_1, Pbind(\amp, 0.01)).play;

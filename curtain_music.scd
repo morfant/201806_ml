@@ -20,7 +20,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 		\amp, ~amp_anc_a
 
 	)
-	).quant_(0).play;
+	).quant_(0);
 // ).quant_(0);
 
 
@@ -36,7 +36,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 		\delta, Pseq([0.75, 0.25, 1], inf),
 		\amp, ~amp_anc_b
 	)
-	).quant_(0).play;
+	).quant_(0);
 // ).quant_(0);
 
 
@@ -59,17 +59,19 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 		\delta, Pseq([0.75, 0.25, 0.5, 0.5, 0.75, 0.25, 0.5, 0.5, 0.75, 3.25], inf),
 		\amp, ~amp_anc_c
 )
-	).quant_(0).play;
+	).quant_(0);
 // ).quant_(0);
 
+~p1.play;~p2.play;~p3.play;
 )
 
 
 
 
 (
+~p1.stop;~p2.stop;~p3.stop;
 // 2. 중세 오르간
-~amp_div_ = 5;
+~amp_div_ = 1;
 ~fadeOutTime_med = 3.0;
 ~amp_med_a = 0.1/2/~amp_div_;
 ~amp_med_b = 0.8/2/~amp_div_;
@@ -90,7 +92,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 		\amp, ~amp_med_a
 	)
 // ).quant_(6);
-).quant_(0).play;
+).quant_(0);
 ~m1.fadeTime = ~fadeOutTime_med;
 
 // melody
@@ -114,7 +116,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 		], inf)
 	)
 // ).quant_(6);
-).quant_(0).play;
+).quant_(0);
 ~m2.fadeTime = ~fadeOutTime_med;
 
 
@@ -138,7 +140,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 		\amp, Pseq([0.9, 0.8, 0.8, 0.9, 0.9]*~amp_med_c, inf),
 	)
 // ).quant_(6);
-).quant_(0).play;
+).quant_(0);
 ~m3.fadeTime = ~fadeOutTime_med;
 
 //bass
@@ -162,12 +164,14 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 		\amp, Pseq([0.2]*~amp_med_d, inf),
 	)
 // ).quant_(6);
-).quant_(0).play;
+).quant_(0);
 ~m4.fadeTime = ~fadeOutTime_med;
 
 
 // fadeout time
 // ~m1.fadeTime = ~m2.fadeTime = ~m3.fadeTime = ~m4.fadeTime = ~fadeOutTime_med;
+
+~m1.play;~m2.play;~m3.play;~m4.play;
 
 )
 
@@ -175,10 +179,12 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 (
+~m1.stop;~m2.stop;~m3.stop;~m4.stop;
+
 //change tempo
 TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 ~fadeOutTime_mod = 6.0;
-~amp_mod_a = 1.2/6;
+~amp_mod_a = 1.2/2;
 ~freqAdd = -12;
 ~freqAdd2 = -2;
 ~freqAdd3 = -7;
@@ -216,7 +222,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 	)
 // ).quant_(4).play;
-).quant_(0).play;
+).quant_(0);
 ~c1.fadeTime = ~fadeOutTime_mod;
 
 
@@ -257,7 +263,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 	)
 // ).quant_(4).play;
-).quant_(0).play;
+).quant_(0);
 ~c2.fadeTime = ~fadeOutTime_mod;
 
 // base rytm
@@ -281,6 +287,8 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 	)
 // ).quant_(4).play;
-).quant_(0).play;
+).quant_(0);
 ~c3.fadeTime = ~fadeOutTime_mod;
+
+~c1.play;~c2.play;~c3.play;
 )
