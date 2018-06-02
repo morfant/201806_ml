@@ -4,7 +4,7 @@ a = Synth(\sori, [\freq, 108.midicps, \amp, 0.2]);
 // 무용수가 완전히 준비가 되면 튼다
 //music A
 TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
-~amp_music_a = 1.2;
+~amp_music_a = 1.5;
 ~music_A = Pdef(\seq_music_a,
 	Pbind(
 		\instrument, \woong,
@@ -28,9 +28,9 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 			], inf),
 		// \freq4, Pseq(([~freq4]).midicps, inf),
 		\delta, Pseq([
-			// Pseq([1, 1, 1, 1]/9, 1),
+			Pseq([1, 1, 1, 1]/9, 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25]/9, 1),
-			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1]/9, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1]/9, 1),
 			], inf),
 		// \sn, Pseq((80..8), 1),
 		// \sn, 1,
@@ -43,8 +43,8 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 		\rq, 0.9
 
 	)
-	).quant_(4).play;
-// ).quant_(0).play;
+// ).quant_(4).play;
+	).quant_(0).play;
 
 )
 
@@ -59,7 +59,8 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 	Pbind(
 		\instrument, \woonglong,
 		\dur, Pseq([
-			Pseq([1, 1, 1, 1]/16, 1),
+			// Pseq([1, 1, 1, 1, 0.5, 0.5]/16, 1),
+			Pseq([1, 1, 1, 1, 1]/16, 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
 		], inf),
 		\freq, Pseq([
@@ -115,7 +116,8 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 			// Pseq([100, 200, 400, 900, 500, 200, 1000, 500]/6, 1),
 			// Pseq([500, 450], 1),
 		// Ppar([
-				Pseq([500, 420, 350], 1),
+			// Pseq([500, 420, 350]+240, 1),
+			Pseq([500, 420, 350], 1),
 			// Pseq([500, 450], 1),
 		// ], inf),
 			], inf),
@@ -133,7 +135,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 	Pbind(
 		\instrument, \woonglong,
 		\dur, Pseq([
-			Pseq([1, 1]/2, 1),
+			Pseq([1, 1]/4, 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
 		], inf),
 		\delta, Pseq([
