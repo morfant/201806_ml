@@ -13,6 +13,7 @@ Buffer.freeAll;
 ~buf_voice_haerim = Buffer.read(s, ~path_ ++ "0_1_interview_haerim.wav");
 ~buf_voice_taei = Buffer.read(s, ~path_ ++ "0_2_interview_taei.wav");
 ~buf_voice_ch = Buffer.read(s, ~path_ ++ "0_3_interview_ch.wav");
+~buf_voice_mom = Buffer.read(s, ~path_ ++ "0_5_interview_mom.wav");
 ~buf_outtro_end = Buffer.read(s, ~path_ ++ "0_4_interview_all.wav");
 ~buf_outtro_end_wave = Buffer.read(s, ~path_ ++ "0_4_interview_all_wave.wav");
 

@@ -227,7 +227,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~mic.free;
 
 
-// 중세 오르간 음악은 태이씨 이외의 무용수들이 모두 나가고, 태있 망원경 들고 의자 올라와서 탑 조명 들어오면 페이드로 나간다.
+// 중세 오르간 음악은 태이씨 이외의 무용수들이 모두 나가고, 태이씨 망원경 들고 의자 올라와서 탑 조명 들어오면 페이드로 나간다.
 // 이때 태이씨 나레이션 go
 (
 ~m1 = Pdef(\seq_med_1, Pbind(\amp, 0)).play;
@@ -359,9 +359,9 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 // 정아씨가 '장인의 운명' 하고, 최여사님 탑 조명 들어오면 최여사님 나레이션 나온다.
-~syn_buf_voice_ch = Synth.new(\play_buffer, [\bufnum, ~buf_voice_ch, \amp, 2.0]);
-~syn_buf_voice_ch.set(\amp, 2.0);
-~syn_buf_voice_ch.release(0.3);
+~syn_buf_voice_mom = Synth.new(\play_buffer, [\bufnum, ~buf_voice_mom, \amp, 0.7]);
+~syn_buf_voice_mom.set(\amp, 0.85);
+~syn_buf_voice_mom.release(0.3);
 
 
 
