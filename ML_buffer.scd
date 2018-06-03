@@ -58,14 +58,10 @@ SynthDef(\fil, {
 	atktime = 0.1, sustime = 1, reltime = 0.5, addamp = 0.0, freq_tri = 20, amp_tri = 0.2,
 	ping_amp = 0.5, ping_freq = 400, fm_freq = 10, fm_amp = 0.1;
 	var sig = In.ar(in_bus);
-	var sig2 = LFNoise2.kr(freq_tri, mul: amp_tri);
 	var amt = AmplitudeMod.kr(sig, 0.2, 0.5);
 	var sigfm = LFTri.kr(amt * fm_freq, mul: fm_amp);
 	var sig3 = SinOsc.ar(amt * ping_freq * sigfm, mul: ping_amp);
-	var sig4 = SinOsc.ar(amt * 0.1 * ping_freq * sigfm, mul: ping_amp);
-	var sig5 = SinOsc.ar(amt * 2 * ping_freq * sigfm, mul: ping_amp);
-	var fil = RLPF.ar(sig, freq, rq);
-	Out.ar(0, Pan2.ar(fil+(Mix.ar([sig3])*addamp), 0, amp) * EnvGen.kr(Env.linen(atktime, sustime, reltime), gate, doneAction: 2));
+	Out.ar(0, Pan2.ar(sig+(sig3*addamp), 0, amp) * EnvGen.kr(Env.linen(atktime, sustime, reltime), gate, doneAction: 2));
 }).add;
 )
 

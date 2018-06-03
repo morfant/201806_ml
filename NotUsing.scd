@@ -59,3 +59,51 @@ Pdef(\seq4,
 	)
 ).quant_(6).play;
 */
+
+
+
+// 찰칵찰칵? - 개념 무용 test 해 볼 것
+//ambient
+(
+~spdDiv = 4;
+
+~dd1 = Pdef(\ddd,
+	Pbind(
+        \instrument,        \chal,
+		\freq, Pseq([
+			Pseq(([55, 65, 77, 34, 90, 24, 10, 40, 80]*0.8).midicps, 3),
+			// Pseq(([#[20], 80, 90, 90, #[30], 80, 90, 80, #[100], #[80], 90, 80, 70]/2).midicps, 1),
+		], inf),
+        \dur, Pseq([
+			Pseq([4, 2, 1, 5, 1, 2, 0.4, 0.2, 0.5]/~spdDiv, 3),
+			// Pseq([1, 1, 1, 1,  1, 1, 1, 1,  1, 2, 1,  1, 4]/~spdDiv, 1),
+		], inf),
+		// \degree,            Pseq( [1, 2, 7, 2, 22, 39, 44]/148, inf),
+        \amp,               0.4,
+		\freqBase, Pseq(([20]), inf),
+		\freqAmp, 0.1,
+		\decay, 0.5
+
+    )
+).play;
+
+~dd2 = Pdef(\ddd2,
+	Pbind(
+        \instrument,        \chal,
+		\freq, Pseq([
+			// Pseq(([55, 65, 77, 34, 90, 24, 10, 40, 80]*0.8).midicps, 3),
+			Pseq(([#[20], 80, 90, 90, #[30], 80, 90, 80, #[100], #[80], 90, 80, 70]/2).midicps, 1),
+		], inf),
+        \dur, Pseq([
+			// Pseq([4, 2, 1, 5, 1, 2, 0.4, 0.2, 0.5]/~spdDiv, 3),
+			Pseq([1, 1, 1, 1,  1, 1, 1, 1,  1, 2, 1,  1, 4]/~spdDiv, 1),
+		], inf),
+		// \degree,            Pseq( [1, 2, 7, 2, 22, 39, 44]/148, inf),
+        \amp,               0.4,
+		\freqBase, Pseq(([20]), inf),
+		\freqAmp, 0.1,
+		\decay, 0.5
+
+    )
+).play;
+)

@@ -537,7 +537,11 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 )
 
 
+
+
+
 (// 민씨 의자 가지고 올 때 : // 피아노 소리 fade in
+t.free;
 ~c3.stop;
 ~keyaaa = -3;
 // base rytm
@@ -670,8 +674,86 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~mic = Synth(\micin, [\amp, 1.2]);
 ~mic.set(\amp, 1.2);
 ~mic.free;
+
+
+
 // 개념무용 음악 먼저 go
+(// 개념 무용 : 실행만 - 소리는 안남
+var ampMul = 0;
+
+~key_con_add = 0;
+~fadeOutTime_con = 4.0;
+
+~con = Pdef(\seq_concept_1,
+	Pbind(
+		// \instrument, \gobeat,
+		\instrument, \condan,
+		// \instrument, "help-TCoin",
+		\dur, Pseq([
+			Pseq([1, 1/2, 1*3/2, 1, 1]/4, 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([65, 68, 59, #[71, 68], #[69, 66]]+~key_con_add).midicps, 1),
+			Pseq(([65, 68, 59, #[71, 68], #[69, 66]]+~key_con_add-2).midicps, 1),
+			Pseq(([65, 68, 59, #[71, 66], #[69, 66]]+~key_con_add+5).midicps, 1),
+			Pseq(([65, 68, 59, #[71, 66], #[69, 66]]+~key_con_add-3).midicps, 1),
+		], inf),
+		\delta, Pseq([
+			Pseq([1/32, 1, 1, 1, 1]*2/3, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+		], inf),
+		\amp, Pseq([0.2, 0.4, 0.4, 0.4, 0.32]*ampMul, inf),
+		\amp2, 0.1,
+		\freq2, 800,
+
+	)
+).quant_(0).play;
+~con.fadeTime = ~fadeOutTime_con;
+)
+
+(// 개념 무용 : fade in
+
+var ampMul = 1;
+
+~key_con_add = 0;
+~fadeOutTime_con = 4.0;
+
+~con = Pdef(\seq_concept_1,
+	Pbind(
+		// \instrument, \gobeat,
+		\instrument, \condan,
+		// \instrument, "help-TCoin",
+		\dur, Pseq([
+			Pseq([1, 1/2, 1*3/2, 1, 1]/4, 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([65, 68, 59, #[71, 68], #[69, 66]]+~key_con_add).midicps, 1),
+			Pseq(([65, 68, 59, #[71, 68], #[69, 66]]+~key_con_add-2).midicps, 1),
+			Pseq(([65, 68, 59, #[71, 66], #[69, 66]]+~key_con_add+5).midicps, 1),
+			Pseq(([65, 68, 59, #[71, 66], #[69, 66]]+~key_con_add-3).midicps, 1),
+		], inf),
+		\delta, Pseq([
+			Pseq([1/32, 1, 1, 1, 1]*2/3, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+		], inf),
+		\amp, Pseq([0.2, 0.4, 0.4, 0.4, 0.32]*ampMul, inf),
+		\amp2, 0.1,
+		\freq2, 800,
+
+	)
+).quant_(0).play;
+~con.fadeTime = ~fadeOutTime_con;
+)
+
+
+
 // 개념무용 fade out
+(// fadeout
+~con = Pdef(\seq_concept_1, Pbind(\instrument, \condan, \amp, 0)).play;
+)
+
+~con.stop;
+
 
 // 멘트
 ~mic = Synth(\micin, [\amp, 1.2]);
@@ -774,175 +856,252 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 // 세숫대야 정아씨 솔로 : 음악 없음
-
-// 게임 씬 - 둘 중 하나는 솔로에 쓰이는 음악이다. - 3분 듣고 신호가 있어야 한다.
-
+// 라이브로 나레이션?
 
 
-(
-a = Synth(\sori);
-a.set(\freq, 200, \freq2, 20, \freq3, 10, \amp, 0.1, \freq4, 100);
-)
 
 
-//lead
-(
-c = Pbind(
-        \instrument,        \sori,
-//        \nharms,            32,
-	// \root,             [-3, 12],
-	\dur,           Pseq([5, 5, 5, 4, 4, 3, 7, 3, 2, 4, 6, 2]/5, 12),
-	\freq,           Pseq([50, 100, 200, 300, 100, 300, 200], 12),
-	\freq4,          Pseq([4, 6, 9, 2, 3, 4, 6, 2, 8, 2, 1, 30], 12),
-        \amp,               0.2
+//---------------- 게임 씬 ----------------
 
-    ).play;
-)
+(// 혜림씨 끝나면 음악 먼저
+// game bgm
+TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
+~div = 4;
+~div2 = ~div/2;
+~key = -4;
+~key2 = ~key - 16;
+~key3 = ~key - 1 + 12;
+~fadeOutTime_game = 4.0;
 
 
-// 찰칵찰칵? - 개념 무용?
-//ambient
-(
-~spdDiv = 4;
+~amp_game = 0.6;
+~amp_game_b = ~amp_game*0.25;
+~amp_game_c = ~amp_game*~amp_game_b - 0.05;
+~amp_game_a = ~amp_game*~amp_game_b - 0.15;
+// ~amp_game_a = ~amp_game_b = ~amp_game_c = 0;
 
-~dd1 = Pdef(\ddd,
+~g1 = Pdef(\seq_game_1,
 	Pbind(
-        \instrument,        \chal,
+		\instrument, \gobeat,
+		// \instrument, \lfp,
+		// \instrument, "help-TCoin",
+		\dur, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]*0.7, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
 		\freq, Pseq([
-			Pseq(([55, 65, 77, 34, 90, 24, 10, 40, 80]*0.8).midicps, 3),
-			// Pseq(([#[20], 80, 90, 90, #[30], 80, 90, 80, #[100], #[80], 90, 80, 70]/2).midicps, 1),
+			Pseq(([59, 64, 63, 66, 59, 64, 63, 59]+~key).midicps, 1),
+			Pseq([Rest(1/~div)], 8),
+			Pseq(([59, 64, 63, 66, 59, 64, 63, 59]-2+~key).midicps, 1),
+			Pseq([Rest(1/~div)], 8),
+			// Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd).midicps, 1),
 		], inf),
-        \dur, Pseq([
-			Pseq([4, 2, 1, 5, 1, 2, 0.4, 0.2, 0.5]/~spdDiv, 3),
-			// Pseq([1, 1, 1, 1,  1, 1, 1, 1,  1, 2, 1,  1, 4]/~spdDiv, 1),
-		], inf),
-		// \degree,            Pseq( [1, 2, 7, 2, 22, 39, 44]/148, inf),
-        \amp,               0.4,
-		\freqBase, Pseq(([20]), inf),
-		\freqAmp, 0.1,
-		\decay, 0.5
+		\delta, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div, 1),
+			Pseq([Rest(1/~div)], 8),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+			], inf),
+		\amp, ~amp_game_a,
 
-    )
-).play;
+	)
+// ).quant_(4).play;
+).quant_(0);
+// ~g1.fadeTime = ~fadeOutTime_game;
 
-~dd2 = Pdef(\ddd2,
+~g2 = Pdef(\seq_game_2,
 	Pbind(
-        \instrument,        \chal,
+		\instrument, \gobeat,
+		\dur, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1], 2),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5], 1),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1], 1),
+		], inf),
 		\freq, Pseq([
-			// Pseq(([55, 65, 77, 34, 90, 24, 10, 40, 80]*0.8).midicps, 3),
-			Pseq(([#[20], 80, 90, 90, #[30], 80, 90, 80, #[100], #[80], 90, 80, 70]/2).midicps, 1),
+			// Pseq(([63]+~key2).midicps, 8),
+			// Pseq(([63]-2+~key2).midicps, 8),
+			Pseq(([63, 63, 63, 63, 63, 63, 63, 65]+~key2).midicps, 1),
+			Pseq(([63]-2+~key2).midicps, 8),
+			Pseq(([63, 63, 63, 63, 63, 63, 63, 59, 60]+~key2).midicps, 1),
+			Pseq(([63]-2+~key2).midicps, 8),
+
 		], inf),
-        \dur, Pseq([
-			// Pseq([4, 2, 1, 5, 1, 2, 0.4, 0.2, 0.5]/~spdDiv, 3),
-			Pseq([1, 1, 1, 1,  1, 1, 1, 1,  1, 2, 1,  1, 4]/~spdDiv, 1),
+		\delta, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div2, 2),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5]/~div2, 1),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div2, 1),
+			], inf),
+		\amp, ~amp_game_b,
+
+	)
+// ).quant_(4).play;
+).quant_(0);
+~g2.fadeTime = ~fadeOutTime_game;
+
+
+~g3 = Pdef(\seq_game_3,
+	Pbind(
+		\instrument, \gobeat,
+		// \instrument, "help-TCoin",
+		\dur, Pseq([
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 1], 1),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1, 1, 0.8, 1.2], 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5], 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 1], 1),
 		], inf),
-		// \degree,            Pseq( [1, 2, 7, 2, 22, 39, 44]/148, inf),
-        \amp,               0.4,
-		\freqBase, Pseq(([20]), inf),
-		\freqAmp, 0.1,
-		\decay, 0.5
+		\freq, Pseq([
+			// Pseq(([63]+~key2).midicps, 8),
+			// Pseq(([63]-2+~key2).midicps, 8),
+			Pseq(([60, 60, 58, 60, 62, 58, 58, 56, 58, 55, 58]+~key3).midicps, 1),
+			// Pseq(([60, 60, 58, 60, 62, 58, 58, 56, 58, 58]+~key3).midicps, 1),
+			// Pseq(([63]-2+~key2).midicps, 8),
+			// Pseq(([63, 63, 63, 63, 63, 63, 63, 59, 60]+~key3).midicps, 1),
+			// Pseq(([63]-2+~key2).midicps, 8),
 
-    )
-).play;
+		], inf),
+		\delta, Pseq([
+			// Pseq([2, 1, 0.5, 3.5, 1, 2, 1, 0.5, 3.5, 1]/~div2, 1),
+			Pseq([2, 1, 0.5, 3.5, 1, 2, 1, 0.5, 2.5, 1, 1]/~div2, 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5]/~div2, 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div2, 1),
+			], inf),
+		\amp, ~amp_game_c,
 
+	)
+// ).quant_(4).play;
+	).quant_(0);
+~g3.fadeTime = ~fadeOutTime_game;
 
+~g1.play;~g2.play;~g3.play;
 
 )
 
 
-( // 통통통통 - 폴리 리듬? : a - 3분
-{
-	var p, a, b;
-	p = Impulse.ar(8);
-	a = SinOsc.ar(1200, 0, Decay2.ar(p, 0.005, 0.1));
-	b = SinOsc.ar(#[224, 100],  0, Decay2.ar(PulseDivider.ar(p, MouseX.kr(1,8).round(1)), 0.005, 0.5));
-	[b, a] * 0.4
-}.play;
+(// game bgm fade out
+
+TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
+~div = 4;
+~div2 = ~div/2;
+~key = -4;
+~key2 = ~key - 16;
+~key3 = ~key - 1 + 12;
+~fadeOutTime_game = 2.0;
+
+
+~amp_game = 0;
+~amp_game_b = 0;
+~amp_game_c = 0;
+~amp_game_a = 0;
+// ~amp_game_a = ~amp_game_b = ~amp_game_c = 0;
+
+~g1 = Pdef(\seq_game_1,
+	Pbind(
+		\instrument, \gobeat,
+		// \instrument, \lfp,
+		// \instrument, "help-TCoin",
+		\dur, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]*0.7, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([59, 64, 63, 66, 59, 64, 63, 59]+~key).midicps, 1),
+			Pseq([Rest(1/~div)], 8),
+			Pseq(([59, 64, 63, 66, 59, 64, 63, 59]-2+~key).midicps, 1),
+			Pseq([Rest(1/~div)], 8),
+			// Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd).midicps, 1),
+		], inf),
+		\delta, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div, 1),
+			Pseq([Rest(1/~div)], 8),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+			], inf),
+		\amp, ~amp_game_a,
+
+	)
+// ).quant_(4).play;
+).quant_(0);
+// ~g1.fadeTime = ~fadeOutTime_game;
+
+~g2 = Pdef(\seq_game_2,
+	Pbind(
+		\instrument, \gobeat,
+		\dur, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1], 2),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5], 1),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1], 1),
+		], inf),
+		\freq, Pseq([
+			// Pseq(([63]+~key2).midicps, 8),
+			// Pseq(([63]-2+~key2).midicps, 8),
+			Pseq(([63, 63, 63, 63, 63, 63, 63, 65]+~key2).midicps, 1),
+			Pseq(([63]-2+~key2).midicps, 8),
+			Pseq(([63, 63, 63, 63, 63, 63, 63, 59, 60]+~key2).midicps, 1),
+			Pseq(([63]-2+~key2).midicps, 8),
+
+		], inf),
+		\delta, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div2, 2),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5]/~div2, 1),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div2, 1),
+			], inf),
+		\amp, ~amp_game_b,
+
+	)
+// ).quant_(4).play;
+).quant_(0);
+~g2.fadeTime = ~fadeOutTime_game;
+
+
+~g3 = Pdef(\seq_game_3,
+	Pbind(
+		\instrument, \gobeat,
+		// \instrument, "help-TCoin",
+		\dur, Pseq([
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 1], 1),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1, 1, 0.8, 1.2], 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5], 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 1], 1),
+		], inf),
+		\freq, Pseq([
+			// Pseq(([63]+~key2).midicps, 8),
+			// Pseq(([63]-2+~key2).midicps, 8),
+			Pseq(([60, 60, 58, 60, 62, 58, 58, 56, 58, 55, 58]+~key3).midicps, 1),
+			// Pseq(([60, 60, 58, 60, 62, 58, 58, 56, 58, 58]+~key3).midicps, 1),
+			// Pseq(([63]-2+~key2).midicps, 8),
+			// Pseq(([63, 63, 63, 63, 63, 63, 63, 59, 60]+~key3).midicps, 1),
+			// Pseq(([63]-2+~key2).midicps, 8),
+
+		], inf),
+		\delta, Pseq([
+			// Pseq([2, 1, 0.5, 3.5, 1, 2, 1, 0.5, 3.5, 1]/~div2, 1),
+			Pseq([2, 1, 0.5, 3.5, 1, 2, 1, 0.5, 2.5, 1, 1]/~div2, 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5]/~div2, 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div2, 1),
+			], inf),
+		\amp, ~amp_game_c,
+
+	)
+// ).quant_(4).play;
+	).quant_(0);
+~g3.fadeTime = ~fadeOutTime_game;
+
+~g1.play;~g2.play;~g3.play;
+
+)
+
+(// 다시 틀기 전에  반드시 stop 하거나 cmd + . 할 것
+~g1.stop;~g2.stop;~g3.stop;
 )
 
 
-p = Pbind(\instrument, \latooncarfian);
-p.play;
-(// 으르렁대? : : b - 3분
-p.stream = Pbind(
-	\instrument, \latooncarfian,
-    \dur, 1,
-	\a, Prand((0.1, 0.2..3.0), inf),
-	\b, Prand((0.1, 0.2..3.0), inf),
-	\c, Prand((0.1, 0.2..3.0), inf),
-	\d, Prand((0.1, 0.2..3.0), inf),
-	\aa, Pbeta(0.1, 3.0, 0.2, 0.2, inf),
-	\bb, Pbeta(0.1, 3.0, 0.2, 0.2, inf),
-	\cc, Pbeta(0.1, 3.0, 0.2, 0.2, inf),
-	\dd, Pbeta(0.1, 3.0, 0.2, 0.2, inf),
-    \amp, 0.9
-).asStream;
-)
+// 두번째 라운드 사운드 대결 준비 해야 함.
 
 
 
-( // 타다다닥
-t = { arg gate=1, prob = 0.4;
-	var env, n=32, sig, trig;
-	trig = Impulse.ar(150, 0, SinOsc.kr(0.5,0,0.5,0.5));
-
-	sig = Mix.fill(3, {Ringz.ar(CoinGate.ar(prob, trig*0.5), #[0.1, 1, 3]*Rand(5000, 6000), 0.1)})*0.2;
-	env = Env(
-		[0]++{1.0.rand.squared}.dup(n-1)++[0],
-				{rrand(0.005,0.3)}.dup(n),
-				\lin, n-8, 8 );
-	EnvGen.kr(env, gate, doneAction: 2) * sig
-}.play;
-)
-
-t.free;
-#[1,1.5]
-
-['a']++['b']
-		[0]++{1.0.rand.squared}.dup(3-1)++[0]
 
 
-Ringz.ar(
-
-p = Pbind(\instrument, \latooncarfian);
-
-p.play;
-
-(// 으르렁대?
-p.stream = Pbind(
-	\instrument, \latooncarfian,
-    \dur, 1,
-	\a, Prand((0.1, 0.2..3.0), inf),
-	\b, Prand((0.1, 0.2..3.0), inf),
-	\c, Prand((0.1, 0.2..3.0), inf),
-	\d, Prand((0.1, 0.2..3.0), inf),
-	\aa, Pbeta(0.1, 3.0, 0.2, 0.2, inf),
-	\bb, Pbeta(0.1, 3.0, 0.2, 0.2, inf),
-	\cc, Pbeta(0.1, 3.0, 0.2, 0.2, inf),
-	\dd, Pbeta(0.1, 3.0, 0.2, 0.2, inf),
-    \amp, 0.1
-).asStream;
-)
 
 
-// 질문 후에 반복 음악 : 점점 반복 주기 짧아지2
-
-	a = Synth("help-TCoin", [\freq, 210, \freq_am, 9, \amp, 0.3]);
-	a.set(\freq, 300, \freq_am, 21, \amp, 0.3);
-	a.set(\freq, 400, \freq_am, 9, \amp, 0.3);
-	a.set(\freq, 9, \freq_am, 9, \amp, 0.3);
-	a.set(\freq, 13, \freq_am, 9, \amp, 0.3);
 
 
-	a.set(\freq, 10, \freq_am, 9, \amp, 0.0);
-
-	a = Synth("help-TCoin", [\freq, 6, \freq_am, 9, \amp, 0.3]);
-	a = Synth("help-TCoin", [\freq, 10, \freq_am, 9, \amp, 0.3]);
-	a = Synth("help-TCoin", [\freq, 10, \freq_am, 9, \amp, 0.3]);
-a.free;
-
-
-p.free;
-
-p.stop
-p.stream = Pbind(\instrument, \latooncarfian, \amp, 0.0).asStream;
