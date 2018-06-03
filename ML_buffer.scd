@@ -58,7 +58,7 @@ SynthDef(\fil, {
 	atktime = 0.1, sustime = 1, reltime = 0.5, addamp = 0.0, freq_tri = 20, amp_tri = 0.2,
 	ping_amp = 0.5, ping_freq = 400, fm_freq = 10, fm_amp = 0.1;
 	var sig = In.ar(in_bus);
-	var amt = AmplitudeMod.kr(sig, 0.2, 0.5);
+	var amt = Amplitude.kr(sig, 0.2, 0.5);
 	var sigfm = LFTri.kr(amt * fm_freq, mul: fm_amp);
 	var sig3 = SinOsc.ar(amt * ping_freq * sigfm, mul: ping_amp);
 	Out.ar(0, Pan2.ar(sig+(sig3*addamp), 0, amp) * EnvGen.kr(Env.linen(atktime, sustime, reltime), gate, doneAction: 2));

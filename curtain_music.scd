@@ -1,3 +1,7 @@
+// 솔로 끝나고 바로 커튼콜 음악 go
+
+~mic.free;
+
 (// 중세 음들을 고대 소리로
 ~amp_div_ = 1;
 ~fadeOutTime_med = 3.0;

@@ -1,4 +1,4 @@
-(// 혜림씨 끝나면 음악 먼저
+(// 혜림씨 끝나면 음악 먼저 : eq 처리 해야함
 // game bgm
 TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 ~div = 4;
@@ -9,7 +9,7 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 ~fadeOutTime_game = 4.0;
 
 
-~amp_game = 0.6;
+~amp_game = 0.4;
 ~amp_game_b = ~amp_game*0.25;
 ~amp_game_c = ~amp_game*~amp_game_b - 0.05;
 ~amp_game_a = ~amp_game*~amp_game_b - 0.15;
@@ -111,7 +111,11 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 )
 
+// fade in / fade out 사이에 stop을 한 번 하고 들어가야 한다.
+~g1.stop;~g2.stop;~g3.stop;
 
+
+// 마지막 게임이 끝나고 나서 선택 받은 사람 한 명이 앞으로 나오면 fade out
 (// game bgm fade out
 
 TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.

@@ -71,7 +71,7 @@ Pdef(\seq4,
 	Pbind(
         \instrument,        \chal,
 		\freq, Pseq([
-			Pseq(([55, 65, 77, 34, 90, 24, 10, 40, 80]*0.8).midicps, 3),
+			Pseq(([55, 65, 77, 34, 90, 24, 10, 40, 80]*0.8+12+6).midicps, 3),
 			// Pseq(([#[20], 80, 90, 90, #[30], 80, 90, 80, #[100], #[80], 90, 80, 70]/2).midicps, 1),
 		], inf),
         \dur, Pseq([
@@ -87,6 +87,7 @@ Pdef(\seq4,
     )
 ).play;
 
+~spdDiv = 4;
 ~dd2 = Pdef(\ddd2,
 	Pbind(
         \instrument,        \chal,
