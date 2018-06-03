@@ -384,7 +384,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 
-// 모자르트 음악. : "~순수예술 범주가 확고하게 자리 잡았다. 정당성을 요구하였다." 끝나면, 무대위 무용수들이 천을 완전히 잡으면. go
+// 모자르트 음악. : "~정당성을 부여했다." 끝나면, 무대위 무용수들이 천을 완전히 잡으면(?). go
 ~syn_buf_mozart = Synth.new(\play_buffer, [\bufnum, ~buf_mozart, \amp, 0.7]);
 ~syn_buf_mozart.set(\amp, 0.9);
 ~syn_buf_mozart.release(0.3);
@@ -408,7 +408,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~mic.free;
 
 
-// 베토벤 음악 : 사리야 끝나고 모두 퇴장했다가 다시 들어와서 '쉿' 소리 4번 듣고 go : 2분후 fade out : 2분짜리로 만들어 놓을 것
+// 베토벤 음악 : 사리야 끝나고 모두 퇴장했다가 다시 들어와서 '쉿' 소리 4번 듣고 go : 2분후 fade out
 ~syn_buf_beethoven = Synth.new(\play_buffer, [\bufnum, ~buf_beethoven, \amp, 0.7]);
 ~syn_buf_beethoven.set(\amp, 1.0);
 ~syn_buf_beethoven.release(5.0);
@@ -537,7 +537,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 )
 
 
-(// 민씨 의자 가지고 올 때 : 소리 추가
+(// 민씨 의자 가지고 올 때 : // 피아노 소리 fade in
 ~c3.stop;
 ~keyaaa = -3;
 // base rytm
@@ -571,106 +571,49 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 )
 
 
-// 나레이션 추가 - 태이씨가 사다리 가지고 들어와서 자리 잡으면 go
-(
-~c4.stop;
-~fadeOutTime_mod = 6.0;
-~amp_mod_a = 0.8;
-~freqAdd = -12;
-~freqAdd2 = -2;
-~freqAdd3 = -7;
-// ~freqAdd = 0;
-~freq4 = 112;
-
-// low chord
-~c1 = Pdef(\seq_mod_1,
+(// 피아노 소리 fade out
+~keyaaa = -3;
+// base rytm
+~c4 = Pdef(\seq_mod_4,
 	Pbind(
-		\instrument, \woong,
+		// \instrument, \sori,
+		// \instrument, \gobeat,
+		\instrument, "help-TCoin",
 		\dur, Pseq([
-			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
-			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+			Pseq([1, 1/2, 1*3/2, 1, 1], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
 		], inf),
 		\freq, Pseq([
-			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 44, 44]+~freqAdd).midicps, 1),
-			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd).midicps, 1),
+			Pseq(([65, 68, 59, #[71, 68], #[69, 66]]+~keyaaa).midicps, 1),
+			Pseq(([65, 68, 59, #[71, 68], #[69, 66]]+~keyaaa-2).midicps, 1),
+			Pseq(([65, 68, 59, #[71, 66], #[69, 66]]+~keyaaa+5).midicps, 1),
+			// Pseq(([65, 68, 59, #[71, 66], #[69, 66]]+~keyaaa-3).midicps, 1),
 		], inf),
-		\freq2, Pseq([
-			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 44, 44]+~freqAdd2).midicps, 1),
-			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd2).midicps, 1),
-		], inf),
-		\freq3, Pseq([
-			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 44, 44]+~freqAdd3).midicps, 1),
-			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd3).midicps, 1),
-		], inf),
-		\freq4, Pseq(([~freq4]).midicps, inf),
+		// \freq4, Pseq(([~freq4]).midicps, inf),
 		\delta, Pseq([
-			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
-			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+			Pseq([1/32, 1, 1, 1, 1]/1, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
 		], inf),
-		// \sn, Pseq((80..8), 1),
-		\sn, 8,
-		\amp, ~amp_mod_a*4/5
+		\amp, Pseq([0.2, 0.4, 0.4, 0.4, 0.32]/4*0, inf),
+		// \amp, 0.5
 
 	)
 // ).quant_(4).play;
-).quant_(0);
-~c1.fadeTime = ~fadeOutTime_mod;
-
-
-// high chord
-~c2 = Pdef(\seq_mod_2,
-	Pbind(
-		\instrument, \woong,
-		\dur, Pseq([
-			Pseq([0.25], 1),
-		], inf),
-		\freq, Pseq([
-			Pseq([
-				Pseq(([90]+~freqAdd).midicps, 8*4),
-				Pseq(([80]+~freqAdd).midicps, 8*4),
-				Pseq(([60]+~freqAdd).midicps, 8*4),
-				Pseq(([83]+~freqAdd).midicps, 8*4),
-				Pseq(([70]+~freqAdd).midicps, 8*4),
-			], inf),
-		], inf),
-		\freq2, Pseq([
-			Pseq(([90]+~freqAdd2).midicps, 1),
-		], inf),
-		\freq3, Pseq([
-			Pseq(([90]+~freqAdd3).midicps, 1),
-		], inf),
-		\freq4, Pseq(([~freq4]).midicps, inf),
-		\delta, Pseq([
-			Pseq([0.25], 1),
-		], inf),
-		// \sn, Pseq((80..8), 1),
-		\sn, Pseq([
-			// Pseq(([100]).midicps, 8*2),
-			// Pseq(([60]).midicps, 8*2),
-			// Pseq(([50]).midicps, 8*2),
-			Pseq(([1]).midicps, 8*2),
-		], inf),
-		\amp, ~amp_mod_a
-
-	)
-// ).quant_(4).play;
-).quant_(0);
-~c2.fadeTime = ~fadeOutTime_mod;
-
-~c1.play;~c2.play;
-
-// ~syn_buf_outtro_end = Synth.new(\play_buffer, [\bufnum, ~buf_outtro_end_wave, \amp, 2.3]);
+).quant_(0).play;
+~c4.fadeTime = ~fadeOutTime_mod;
 )
 
-~syn_buf_outtro_end.set(\amp, 2.3);
-~syn_buf_outtro_end.release(0.3);
+// 파도소리 인터뷰 추가 : 태이씨가 사다리 가지고 들어와서 자리 잡으면 go
+~syn_buf_outtro_wave = Synth.new(\play_buffer, [\bufnum, ~buf_outtro_wave, \amp, 2.0]);
+~syn_buf_outtro_wave.set(\amp, 1.7);
+~syn_buf_outtro_wave.release(0.3);
+
+// 다시 피아노 fade in
 
 // 인터미션 안내에도 마이크?
-// 멘트
 ~mic = Synth(\micin, [\amp, 1.0]);
 ~mic.set(\amp, 0.8);
 ~mic.free;
-
 
 // modern stop : 5분간 인터미션이 있겠습니다 후 조명 나가고 나서 페이드 아웃
 (
@@ -680,75 +623,14 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~c4 = Pdef(\seq_mod_4, Pbind(\amp, 0)).play;
 )
 
-~c4.stop;
 
 //stop
-(~c1.stop;~c2.stop;~c3.stop;)
+(~c1.stop;~c2.stop;~c3.stop;~c4.stop;)
 
 
 
-(// sf 느낌
-~amp_mor_a = 0.1/2;
-~freqAdd = 3;
-~freq4 = 112;
 
-~c3 = Pdef(\seq_mor_3,
-	Pbind(
-		\instrument, \sori,
-		\dur, Pseq([
-			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
-			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
-		], inf),
-		\freq, Pseq([
-			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 44, 44]+~freqAdd).midicps, 1),
-			Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd).midicps, 1),
-		], inf),
-		\freq4, Pseq(([~freq4]).midicps, inf),
-		\delta, Pseq([
-			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
-			Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
-		], inf),
-		\amp, ~amp_mor_a
-
-	)
-).quant_(0).play;
-
-
-~c2 = Pdef(\seq_mor_2,
-	Pbind(
-		\instrument, \sori,
-		\dur, Pseq([
-			// Pseq([Rest(0.25)], 7*8),
-			Pseq([0.25], inf),
-			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 2, 2], 1),
-		], inf),
-		\freq, Pseq([
-			Pseq(([49, 56, 49, 56, 49, 44, 44]+24).midicps, 1),
-			// Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+3).midicps, 1),
-		], inf),
-		\freq4, Pseq([
-			Pseq([5], 7*4),
-			Pseq([20], 7*4),
-			Pseq([30], 7*4),
-			Pseq([
-				Pseq([40], 7*4),
-				Pseq([90], 7*4),
-				Pseq([50], 7*4),
-				Pseq([80], 7*4),
-				Pseq([50], 7*2),
-			], inf),
-		], inf),
-		\delta, Pseq([
-			Pseq([0.25], 1),
-		], inf),
-		\amp, ~amp_mor_a/3
-
-	)
-).quant_(0).play;
-
-
-)
-
+--------- 2 막 ----------
 
 // ======== 홈쇼핑 : 암전에서 시작 먼저 ========
 ~syn_buf_shopping = Synth.new(\play_buffer, [\bufnum, ~buf_shopping, \amp, 0.5]);
@@ -795,40 +677,54 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~mic = Synth(\micin, [\amp, 1.2]);
 ~mic.set(\amp, 1.4);
 ~mic.free;
+
+
+// 나 정말 으르렁 대
 // 태이씨 동작에 맞춰야 함 : 2 * 8 듣고 go - 중간엔 비트만 나온다든지 하는 변형이 필요하다 - 태이씨 덩실덩실 다음 앞으로 손 내리칠 때 go
 // 일정한 박자로 만들어야 움직임이 쉬울 듯
 (
-
+a.free;
+a = Synth(\play_buffer_m, [\bufnum, ~buf_bts, \amp, 0.2, \out, 100]);
+// a = Synth(\play_buffer_m, [\bufnum, ~buf_bts, \amp, 0.2, \out, 0]);
 //bts
-TempoClock.default.tempo_(40/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
+TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 
-~ululung = Pdef(\seq_uuu,
+~ululung_fil = Pdef(\seq_fff,
 	Pbind(
-		\instrument, \play_buffer_m,
-		\bufnum, ~buf_bts,
-		// \dur, Pseq([
-		// 	Pseq([1, 1, 1], 1),
-		// 	// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
-		// ], inf),
-		// \spd, Pseq([1, 1, 1, 1, 2, 1, 1, Prand([3, 4], 1)], inf),
-		\spd, 1,
-		\start, Pseq([0, 1, 0, 7, 0, 3, 0, 12]*s.sampleRate, inf),
-		\delta, Pseq([
-			Pseq([1, 1, 1, 1], 1),
-		], inf),
-		\rate, Pseq([1, 1, 1, -1, 1, 1, 1, -1], inf),
-		\fil_freq, Pseq([Prand([500, 3000], 1), 300, 1000, 400, Prand([900, 300], 1), 2000], inf),
-		\rq, Pseq([0.5, 0.2, 0.2, 0.8, 0.2, 0.2], inf),
-        \amp, 0.3,
+		\instrument, \fil,
+		\dur, 1,
+		\delta, 1,
+		\freq, 20000,
+		\ping_amp, 0.30,
+		\ping_freq, 7000,
+		// \fm_freq, Pseq([90, 100, 10, 40]/10, inf),
+		\fm_freq, Pseq([2300, 2600, 3000, 4000]*2, inf),
+		\fm_amp, 0.8,
+		// \addamp, 0.0,
+		\addamp, 0.4,
+
+		// \freq, Pseq([20, 100, 100, 10, 20, 30, 60, 120]*60, inf),
+		// \freq, Pseq([2000, 100, 3000, 600], inf),
+		// \freq, 100,
+		// \addamp, Pseq([1, 1.0], inf),
+		// \rq, 1,
+        \amp, 0.9,
+		// \freq_tri, Pseq([10, 2, 1, 20, 100, 1000, 10000], inf),
+		// \amp_tri, 1,
+		\atktime, 0.1,
+		\sustime, 0.9,
+		\reltime, 0.1,
+		\addAction, 1
+
 
 	)
 ).quant_(0).play;
-~ululung.fadeTime = 3.0;
-
+~ululung_fil.fadeTime = 5.0;
 )
 
+
 // fadeout
-~ululung = Pdef(\seq_uuu, Pbind(\amp, 0)).play;
+~ululung_fil = Pdef(\seq_fff, Pbind(\amp, 0)).play;
 
 // not using
 ~syn_buf_bts = Synth.new(\play_buffer, [\bufnum, ~buf_bts, \amp, 0.5]);
@@ -840,9 +736,9 @@ TempoClock.default.tempo_(40/60); // 기본 시계라고 생각하면 된다. 1.
 (
 // 아래 세 줄 순차 실행
 ~syn_buf_shopping = Synth.new(\play_buffer, [\bufnum, ~buf_shopping, \amp, 0.0]);
-~ululung = Pdef(\seq_uuu, Pbind(\amp, 0)).play;
-~syn_buf_shopping.set(\amp, 0.6); // <<
-~syn_buf_shopping.set(\amp, 0.1); // >>
+~ululung_fil = Pdef(\seq_fff, Pbind(\amp, 0)).play;
+~syn_buf_shopping.set(\amp, 0.6); // fade in
+~syn_buf_shopping.set(\amp, 0.1); // fade out
 
 // 마지막 작품 같이 보시면서...
 ~syn_buf_shopping.release(4.0);

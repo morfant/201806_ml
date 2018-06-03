@@ -15,7 +15,7 @@ Buffer.freeAll;
 ~buf_voice_ch = Buffer.read(s, ~path_ ++ "0_3_interview_ch.wav");
 ~buf_voice_mom = Buffer.read(s, ~path_ ++ "0_5_interview_mom.wav");
 ~buf_outtro_end = Buffer.read(s, ~path_ ++ "0_4_interview_all.wav");
-~buf_outtro_end_wave = Buffer.read(s, ~path_ ++ "0_4_interview_all_wave.wav");
+~buf_outtro_wave = Buffer.read(s, ~path_ ++ "0_4_interview_all_wave.wav");
 
 ~buf_mozart = Buffer.read(s, ~path_++"1_1_mozart.wav");
 ~buf_beethoven = Buffer.read(s, ~path_++"1_2_beethoven.wav");
@@ -42,17 +42,34 @@ SynthDef(\play_buffer_m, {
 	fil_freq = 200, rq = 0.6;
 	var trig, fil;
 	// trig = Impulse.kr(10, mul: 0.5, add: 0.5);
-	trig = LFPulse.kr(spd);
+	// trig = LFPulse.kr(spd);
     Out.ar( out,
-			RLPF.ar(
-				PlayBuf.ar(2, bufnum, rate*BufRateScale.kr(bufnum), startPos: start, trigger: trig), fil_freq, rq)
-		// * EnvGen.kr(Env.perc(atk, rel, curv), gate, doneAction: 2) * amp;
+		// RLPF.ar(
+			PlayBuf.ar(
+				2, bufnum, rate*BufRateScale.kr(bufnum), startPos: start, trigger: 1)
+		// ,fil_freq, rq)
 		* EnvGen.kr(Env.adsr(sustainLevel: susLevel), gate, doneAction: 2) * amp;
     )
-}, [0, 0, 0, 0, 0, 10, 0]).add;
+}, [0, 0, 0, 0, 0, 20, 0]).add;
 
 
+SynthDef(\fil, {
+	arg freq = 20000, rq = 1.0, amp = 0.8, in_bus = 100, gate = 1,
+	atktime = 0.1, sustime = 1, reltime = 0.5, addamp = 0.0, freq_tri = 20, amp_tri = 0.2,
+	ping_amp = 0.5, ping_freq = 400, fm_freq = 10, fm_amp = 0.1;
+	var sig = In.ar(in_bus);
+	var sig2 = LFNoise2.kr(freq_tri, mul: amp_tri);
+	var amt = AmplitudeMod.kr(sig, 0.2, 0.5);
+	var sigfm = LFTri.kr(amt * fm_freq, mul: fm_amp);
+	var sig3 = SinOsc.ar(amt * ping_freq * sigfm, mul: ping_amp);
+	var sig4 = SinOsc.ar(amt * 0.1 * ping_freq * sigfm, mul: ping_amp);
+	var sig5 = SinOsc.ar(amt * 2 * ping_freq * sigfm, mul: ping_amp);
+	var fil = RLPF.ar(sig, freq, rq);
+	Out.ar(0, Pan2.ar(fil+(Mix.ar([sig3])*addamp), 0, amp) * EnvGen.kr(Env.linen(atktime, sustime, reltime), gate, doneAction: 2));
+}).add;
 )
+
+Amplitude
 
 
 
@@ -93,9 +110,9 @@ a.set(\freq, 100);
 
 
 // ~syn_buf_outtro_end = Synth.new(\play_buffer, [\bufnum, ~buf_outtro_end, \amp, 2.0]);
-~syn_buf_outtro_end = Synth.new(\play_buffer, [\bufnum, ~buf_outtro_end_wave, \amp, 2.0]);
-~syn_buf_outtro_end.set(\amp, 0.2);
-~syn_buf_outtro_end.release(0.3);
+~syn_buf_outtro_wave = Synth.new(\play_buffer, [\bufnum, ~buf_outtro_wave, \amp, 2.0]);
+~syn_buf_outtro_wave.set(\amp, 0.2);
+~syn_buf_outtro_wave.release(0.3);
 
 
 
