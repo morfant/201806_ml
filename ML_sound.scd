@@ -10,9 +10,10 @@
 - 개념 무용 음악
 - 베토벤 2분짜리로 만들어 놓을 것
 
-- 시작 전 음악 : 정적만 아니게 들릴 듯 말 듯?
+- 하우스 음악 : 정적만 아니게 들릴 듯 말 듯?
 - eq 처리
 - 전체 음량 맞추기
+- 커튼콜 음악 등 디테일 수정
 
 
 //change tempo
@@ -111,7 +112,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 (
 
-// 무용수들 모두 고대 옷 벗고 월계관 벗어 놓고 서면 중세로 전환
+// 무용수들 모두 고대 옷 벗고 월계관 벗어 놓고 모두 똑바로 서면 중세로 전환
 // 어떤 경우 박자가 맞지 않는다!!!!!!
 ~p1.stop;
 ~p2.stop;
@@ -412,7 +413,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~mic.free;
 
 
-// 베토벤 음악 : 사리야 끝나고 모두 퇴장했다가 다시 들어와서 '쉿' 소리 4번 듣고 go : 2분후 fade out
+// 베토벤 음악 : 사리야 끝나고 모두 퇴장했다가 다시 들어와서 (정아-태이-세번째 쉿-네번째 쉿-다선번째 쉿)'쉿' 소리 5번 듣고 go
 ~syn_buf_beethoven = Synth.new(\play_buffer, [\bufnum, ~buf_beethoven, \amp, 0.7]);
 ~syn_buf_beethoven.set(\amp, 1.0);
 ~syn_buf_beethoven.release(5.0);
@@ -828,7 +829,7 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 // "저는 이작품 놓치지 않을건데요". 으르렁에서 홈쇼핑 음악으로 오버랩
 (
 // 아래 세 줄 순차 실행
-~syn_buf_shopping = Synth.new(\play_buffer, [\bufnum, ~buf_shopping, \amp, 0.0]);
+~syn_buf_shopping = Synth.new(\play_buffer, [\bufnum, ~buf_shopping, \start, s.sampleRate * 20, \amp, 0.0]);
 ~ululung_fil = Pdef(\seq_fff, Pbind(\amp, 0)).play;
 ~syn_buf_shopping.set(\amp, 0.6); // fade in
 ~syn_buf_shopping.set(\amp, 0.1); // fade out
