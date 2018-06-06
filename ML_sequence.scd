@@ -11,9 +11,10 @@
 - 베토벤 2분짜리로 만들어 놓을 것
 - 하우스 음악 : 정적만 아니게 들릴 듯 말 듯?
 - 전체 음량 맞추기
+- 커튼콜 음악 등 디테일 수정
 
 - eq 처리
-- 커튼콜 음악 등 디테일 수정
+
 
 
 //change tempo
@@ -29,15 +30,16 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 ~syn_buf_intro.release(0.3);
 
 
-// mic on/off
-~mic = Synth(\micin, [\amp, 0.8]);
+// mic on/off test
+~mic = Synth(\micin, [\amp, 0.6]);
+~mic.set(\amp, 0.6);
 ~mic.free;
 
 
 
-(// 고대 시작 - Pdef set 하는 방법을 알아 볼것
+(// 고대 시작
 
-// 인트로에서 민하씨가 "~에서 ~를 빼면" 하면 고대 음악 go, 조명 암전
+// 인트로에서 민하씨가 "~에서 ~를 빼면" 하면 하고 조명 암전 되면 go
 // 혜림씨 탑 조명 들어오고 모내기 3번 하고 나면 '농협' 인터뷰 go
 TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 ~amp_anc_a = 0.1/2;
@@ -104,15 +106,18 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~syn_buf_voice_haerim.set(\amp, 0.6);
 ~syn_buf_voice_haerim.release(0.3);
 
-// 정아씨 멘트: 섞여 있었다.
+
+// 무용수들 멘트
+
+
+// 정아씨 멘트: "섞여 있었다."로 끝
 ~mic = Synth(\micin, [\amp, 1.0]);
-~mic.set(\amp, 0.8);
+~mic.set(\amp, 1.0);
 ~mic.free;
 
 
-(
-
-// 무용수들 모두 고대 옷 벗고 월계관 벗어 놓고 모두 똑바로 서면 중세로 전환
+(// 중세
+// 무용수들 모두 고대 옷 벗고 월계관 벗어 놓고 민, 태이씨 뒤로 두 걸음 걸어 나와서 서면 전환 (빠른 것 보다는 조금 늦는게 낫다)
 // 어떤 경우 박자가 맞지 않는다!!!!!!
 ~p1.stop;
 ~p2.stop;
@@ -224,6 +229,11 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~m1.play;~m2.play;~m3.play;~m4.play;
 )
 
+// 무용수들 무대를 가로질러 조각처럼 선다.
+// 멘트: 점진적인 변화가 시작된다
+// 태이씨 의자를 가지고 하수 탑에 선다.
+// 멘트: 과학의 승리로 일반화 된다.
+
 // 정아씨 멘트 x 2 : 점진적인 변화가 시작된다. / 과학의 승리로 일반화 되었다.
 ~mic = Synth(\micin, [\amp, 1.0]);
 ~mic.set(\amp, 0.8);
@@ -240,11 +250,11 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~syn_buf_voice_taei = Synth.new(\play_buffer, [\bufnum, ~buf_voice_taei, \amp, 0.6]);
 )
 
-// stop
-(~m1.stop;~m2.stop;~m3.stop;~m4.stop;)
 
 // 태이씨 나레이션 끝나면 중세 음악이 살짝 다시 들어온다. (fade in 처리!!)
 (
+~m1.stop;~m2.stop;~m3.stop;~m4.stop;
+~mic = Synth(\micin, [\amp, 1.0]);
 // 어떤 경우 박자가 맞지 않는다!!!!!!
 ~p1.stop;
 ~p2.stop;
@@ -357,9 +367,6 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 )
 
 // '장인의 운명' 멘트
-~mic = Synth(\micin, [\amp, 1.0]);
-~mic.set(\amp, 0.8);
-~mic.free;
 
 
 // 정아씨가 '장인의 운명' 하고, 최여사님 탑 조명 들어오면 최여사님 나레이션 나온다.
@@ -369,7 +376,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 
-// 최여사님 무대 밖으로 나갈때 음악 같이 아웃.
+// 최여사님 무대 밖으로 나갈때 음악 같이 아웃. 아웃 하면서 정아씨 다음 멘트로 이어짐
 (
 ~m1 = Pdef(\seq_med_1, Pbind(\amp, 0)).play;
 ~m2 = Pdef(\seq_med_2, Pbind(\amp, 0)).play;
@@ -377,7 +384,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~m4 = Pdef(\seq_med_4, Pbind(\amp, 0)).play;
 )
 
-정아씨 멘트
+
 
 // stop
 (~m1.stop;~m2.stop;~m3.stop;~m4.stop;)
@@ -396,7 +403,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~syn_buf_mozart.release(0.3);
 
 
-// 정아씨 멘트
+// 정아씨 멘트 (천 바닥에 떨어지고 나면)
 ~mic = Synth(\micin, [\amp, 1.0]);
 ~mic.set(\amp, 0.8);
 ~mic.free;
@@ -407,6 +414,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~syn_buf_sari.set(\amp, 0.2);
 ~syn_buf_sari.release(0.3);
 
+// cmd . 할 수 있는 포인트
 
 // "쉿" : 정아씨 마이크
 ~mic = Synth(\micin, [\amp, 1.0]);
@@ -415,12 +423,12 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 // 베토벤 음악 : 사리야 끝나고 모두 퇴장했다가 다시 들어와서 (정아-태이-세번째 쉿-네번째 쉿-다선번째 쉿)'쉿' 소리 5번 듣고 go
-~syn_buf_beethoven = Synth.new(\play_buffer, [\bufnum, ~buf_beethoven, \amp, 0.7]);
-~syn_buf_beethoven.set(\amp, 1.0);
+~syn_buf_beethoven = Synth.new(\play_buffer, [\bufnum, ~buf_beethoven, \amp, 0.6]);
+~syn_buf_beethoven.set(\amp, 0.4);
 ~syn_buf_beethoven.release(5.0);
 
 
-// 사진 찍으면서, 멘트
+// 민하씨 사진 찍을때 정아씨 멘트
 ~mic = Synth(\micin, [\amp, 1.0]);
 ~mic.set(\amp, 0.8);
 ~mic.free;
@@ -429,6 +437,8 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 // 3. 모던(찰칵찰칵, 컨베이어, 코카콜라, 좀더 팝댄스?)
 // "모던이다"
 (
+~mic.free;
+
 //change tempo
 TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 ~fadeOutTime_mod = 6.0;
@@ -539,13 +549,12 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~c3.fadeTime = ~fadeOutTime_mod;
 
 ~c1.play;~c2.play;~c3.play;
-~mic.free;
 )
 
 
 
-(// 민씨 의자 가지고 올 때 : // 피아노 소리 fade in
-t.free;
+(// 민씨 의자 가지고 나올 때 : 천천히! // 피아노 소리 fade in, 조금 작게
+// t.free;
 ~c3.stop;
 ~keyaaa = -3;
 // base rytm
@@ -569,7 +578,7 @@ t.free;
 			Pseq([1/32, 1, 1, 1, 1]/1, 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
 		], inf),
-		\amp, Pseq([0.2, 0.4, 0.4, 0.4, 0.32]/4, inf),
+		\amp, Pseq([0.2, 0.4, 0.4, 0.4, 0.32]/5, inf),
 		// \amp, 0.5
 
 	)
@@ -579,7 +588,7 @@ t.free;
 )
 
 
-(// 피아노 소리 fade out
+(// 피아노 소리 fade out: 천천히!
 ~keyaaa = -3;
 // base rytm
 ~c4 = Pdef(\seq_mod_4,
@@ -602,7 +611,7 @@ t.free;
 			Pseq([1/32, 1, 1, 1, 1]/1, 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
 		], inf),
-		\amp, Pseq([0.2, 0.4, 0.4, 0.4, 0.32]/4*0, inf),
+		\amp, Pseq([0.2, 0.4, 0.4, 0.4, 0.32]*0, inf),
 		// \amp, 0.5
 
 	)
@@ -620,7 +629,7 @@ t.free;
 ~c4.stop;
 
 // 인터미션 안내에도 마이크?
-~mic = Synth(\micin, [\amp, 1.0]);
+~mic = Synth(\micin, [\amp, 1.0]); // 피아노 소리 올리고 마이크를 켜면 소리가 다르다? 왜??
 ~mic.set(\amp, 0.8);
 ~mic.free;
 
@@ -640,37 +649,45 @@ t.free;
 
 
 --------- 2 막 ----------
+// **** 무선 마이크 리시버 켜져 있는지 체크 ****
+// mic 테스트
+~mic1 = Synth(\micin, [\amp, 1.0, \in, 1]); // 테스트는 좀 크게
+~mic1.set(\amp, 0.8);
+~mic1.free;
 
-// ======== 홈쇼핑 : 암전에서(하우스가 꺼지면) 시작 먼저 ========
+// ======== 홈쇼핑 : 암전에서(하우스가 꺼지면) 시작 먼저, 마이크 on ========
 ~syn_buf_shopping = Synth.new(\play_buffer, [\bufnum, ~buf_shopping, \amp, 0.5]);
-// 멘트
-~mic1 = Synth(\micin, [\amp, 1.0]);
-~mic1.set(\amp, 1.2);
+~mic1 = Synth(\micin, [\amp, 1.0, \in, 1]);
+~mic1.set(\amp, 0.9);
 ~syn_buf_shopping.set(\amp, 0.1); // 소리 줄어듬
 ~syn_buf_shopping.set(\amp, 0.5); // 소리 커짐
 ~syn_buf_shopping.release(4.0);
-~mic1.free;
+~mic1.free; //  free 안해도 됨
 
 
 // ======== 한대수 ========
-// 멘트
-~mic1 = Synth(\micin, [\amp, 1.0]);
+// 멘트: 첫번째 작품 시작하겠습니다.
+~mic1 = Synth(\micin, [\amp, 1.0, \in, 1]);
 ~mic1.set(\amp, 0.8);
 ~mic1.free;
+
+// 중간에 민 씨 멘트 있음
 // 한대수 : 민하씨가 태이씨한테 벽돌을 뺏어서 바닥에 찍을 때, 중간에 민씨 멘트할 때, 작아졌다 커진다. 두 사람 함께 나갈때 페이드 아웃
 ~syn_buf_handaesoo = Synth.new(\play_buffer, [\bufnum, ~buf_handaesoo, \amp, 0.6]);
 ~syn_buf_handaesoo.set(\amp, 0.2);
-~syn_buf_handaesoo.set(\amp, 0.4);
+~syn_buf_handaesoo.set(\amp, 0.5);
 ~syn_buf_handaesoo.release(4.0);
 
 //끝나자 마자 멘트
-~mic1 = Synth(\micin, [\amp, 1.0]);
+~mic1 = Synth(\micin, [\amp, 1.0, \in, 1]);
 ~mic1.set(\amp, 0.8);
 ~mic1.free;
 
 // ======== 여자의정원 ========
 // 멘트: 민씨 합류 했다가 다시 나오면서 멘트 또 있다.
 // 여자의 정원 : 세 분 모여서 민씨 뒷모습 보이고 살랑살랑 3번 하고 나면 go
+~mic1.free;
+~mic1 = Synth(\micin, [\amp, 1.0, \in, 1]);// 중간에 민씨 멘트
 ~syn_buf_cello = Synth.new(\play_buffer, [\bufnum, ~buf_cello, \amp, 0.8]);~mic1.free;
 ~syn_buf_cello.set(\amp, 0.8);
 ~syn_buf_cello.set(\amp, 0.2);
@@ -678,15 +695,17 @@ t.free;
 
 
 // 멘트
-~mic1 = Synth(\micin, [\amp, 0.8]);
+~mic1 = Synth(\micin, [\amp, 0.8, \in, 1]);
 ~mic1.set(\amp, 1.2);
 ~mic1.free;
 
 
-
+// ~mic1.set(\amp, 1.2);
 // 여자의 정원 끝나면, 개념무용 음악 먼저 go
+
 (// 개념 무용 : 실행만 - 소리는 안남
 var ampMul = 0;
+
 
 ~key_con_add = 0;
 ~fadeOutTime_con = 4.0;
@@ -722,6 +741,10 @@ var ampMul = 0;
 
 var ampMul = 0.5;
 
+// 민씨 움직이며 멘트
+~mic1 = Synth(\micin, [\amp, 0.8]);
+
+
 ~key_con_add = 0;
 ~fadeOutTime_con = 4.0;
 
@@ -755,7 +778,7 @@ var ampMul = 0.5;
 
 // 민씨 들고 움직이며 멘트
 ~mic1 = Synth(\micin, [\amp, 1.2]);
-~mic1.set(\amp, 1.4);
+~mic1.set(\amp, 1.2);
 ~mic1.free;
 
 
@@ -816,10 +839,10 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 ~ululung_fil.fadeTime = 3.0;
 )
 
+// 민씨 다시 멘트
+~mic1 = Synth(\micin, [\amp, 1.2, \in, 1]);
 
 (// 멘트 나올때 소리 줄이기
-~mic1.free;
-~mic1.set(\amp, 1.2);
 ~ululung_fil = Pdef(\seq_fff,
 	Pbind(
 		\instrument, \fil,
@@ -839,7 +862,7 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 		// \freq, 100,
 		// \addamp, Pseq([1, 1.0], inf),
 		// \rq, 1,
-        \amp, 0.2,
+        \amp, 0.4,
 		// \freq_tri, Pseq([10, 2, 1, 20, 100, 1000, 10000], inf),
 		// \amp_tri, 1,
 		\atktime, 0.1,
@@ -903,19 +926,20 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 // 멘트
-~mic1 = Synth(\micin, [\amp, 1.0]);
+~mic1 = Synth(\micin, [\amp, 1.0, \in, 1]);
 ~mic1.set(\amp, 0.9);
 ~mic1.free;
 
 
-// 그다음 '트위스트' : 음악 없음
+// 그다음 '트위스트' : 음악 없음, 치유
 
 
 ~mic1.free;
-~mic1 = Synth(\micin, [\amp, 1.0]);
+~mic1 = Synth(\micin, [\amp, 1.0, \in, 1]);
 
 // 홈쇼핑 중간부터 : "완판" 됐습니다!
 // 음악 중간 부터 다시 나온다. - 아래 두 줄 순차 실행
+~mic1 = Synth(\micin, [\amp, 1.0, \in, 1]);
 ~syn_buf_shopping = Synth.new(\play_buffer, [\bufnum, ~buf_shopping, \start, s.sampleRate * 20, \amp, 0.0]);
 ~syn_buf_shopping.set(\amp, 0.3);
 
@@ -923,7 +947,7 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 ~syn_buf_shopping.set(\amp, 0.1);
 
 // 암전 되고 나서 음악 페이드아웃
-~mic1.free;
+~mic1.free; // 민씨 마이크 off
 ~syn_buf_shopping.release(4.0);
 
 
@@ -936,9 +960,10 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 //---------------- 게임 씬 ----------------
 // 예술작품을 평가하는 것이 과연 가능한 것인지... 다음에 음악 go
-(// 혜림씨 세숫대야 끝나면 음악 먼저
+// 베이스 좀 약하게
+(// 혜림씨가 세숫대야 겹치면 끝나면 음악 먼저
 ~mic.free; // 정아씨 마이크 off
-~mic1 = Synth(\micin, [\amp, 1.0]); // 민하씨 마이크 on
+~mic1 = Synth(\micin, [\amp, 1.0, \in, 1]); // 민하씨 마이크 on
 
 // game bgm
 TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
