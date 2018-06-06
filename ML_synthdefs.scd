@@ -197,9 +197,22 @@ SynthDef("help-TCoin", { arg out=0, prob=0.5, freq = 20, freq_am = 0.5, amp = 0.
 	Out.ar(out,
 		// Mix.fill(3, {Ringz.ar(CoinGate.ar(prob, trig*0.5), #[1,1.5, 2, 4]*Rand(50, 90), 0.01)})*amp
 		SinOsc.ar(#[1, 1.5, 3]*freq)*amp*env
-
 	)
 }).add;
+
+SynthDef("help-TCoin_house", { arg out=0, prob=0.5, freq = 20, freq_am = 0.5, amp = 0.2, gate = 1,
+	atkTime = 0.3, relTime = 0.1;
+	var trig, env;
+	// env = EnvGen.kr(Env.perc(0.3, 1), gate, doneAction: 2);
+	env = EnvGen.kr(Env.perc(), gate, doneAction: 2);
+	trig = Impulse.ar(freq, 0, SinOsc.kr(freq_am,0,1,1));
+	// trig = Impulse.ar(SinOsc.kr(0.01, 0, freq+100, freq+300), 0, SinOsc.kr(freq_am,0,1,1));
+	Out.ar(out,
+		// Mix.fill(3, {Ringz.ar(CoinGate.ar(prob, trig*0.5), #[1,1.5, 2, 4]*Rand(50, 90), 0.01)})*amp
+		SinOsc.ar(#[1, 1.5, 3]*freq)*amp*env
+	)
+}).add;
+
 
 SynthDef(\sori,
 	{
@@ -224,9 +237,9 @@ SynthDef(\sori,
 
 
 //Synth - mic in
-SynthDef(\micin, {| amp = 0, gate = 1 |
+SynthDef(\micin, {| in = 0, amp = 0, gate = 1 |
     var sig;
-    sig = SoundIn.ar(0);
+    sig = SoundIn.ar(in);
     Out.ar(0, Pan2.ar(sig, 0, amp));
 }).add;
 )
