@@ -13,9 +13,14 @@
 - 전체 음량 맞추기
 - 커튼콜 음악 등 디테일 수정
 - eq 처리
-- 큐, 마이크 온 오프 정
+- 베토멘 1분으로 줄이기
 
+- 큐, 마이크 온 오프 정
 - 마이크 on/off 확인
+- 믹서 케이블 책상 아래쪽으로 보내기
+- 녹음기 전원 케이블 연결하
+
+
 
 
 
@@ -26,7 +31,7 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 // eq global var 설정
 ~masterEQ = ChannelEQ.new(2, s, 0, 0);
-
+~masterEQ.gui.onSelect('x_flat');
 
 // ======================================= Sequence ===========================================
 
@@ -44,8 +49,9 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 
+// 중고음 조금 빼기
 (// 고대 시작
-
+~masterEQ.gui.onSelect('ancient');
 // 인트로에서 민하씨가 "~에서 ~를 빼면" 하면 하고 조명 암전 되면 go
 // 혜림씨 탑 조명 들어오고 모내기 3번 하고 나면 '농협' 인터뷰 go
 TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
@@ -124,6 +130,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 (// 중세
+~masterEQ.gui.onSelect('med');
 // 무용수들 모두 고대 옷 벗고 월계관 벗어 놓고 민, 태이씨 뒤로 두 걸음 걸어 나와서 서면 전환 (빠른 것 보다는 조금 늦는게 낫다)
 // 어떤 경우 박자가 맞지 않는다!!!!!!
 ~p1.stop;
@@ -380,8 +387,8 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 // 정아씨가 '장인의 운명' 하고, 최여사님 탑 조명 들어오면 최여사님 나레이션 나온다.
-~syn_buf_voice_mom = Synth.new(\play_buffer, [\bufnum, ~buf_voice_mom, \amp, 0.6]);
-~syn_buf_voice_mom.set(\amp, 0.6);
+~syn_buf_voice_mom = Synth.new(\play_buffer, [\bufnum, ~buf_voice_mom, \amp, 0.5]);
+~syn_buf_voice_mom.set(\amp, 0.5);
 ~syn_buf_voice_mom.release(0.3);
 
 
@@ -408,7 +415,8 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 // 모자르트 음악. : "~정당성을 부여했다." 끝나면, 무대위 무용수들이 천을 완전히 잡으면(?). go
-~syn_buf_mozart = Synth.new(\play_buffer, [\bufnum, ~buf_mozart, \amp, 0.55]);
+~masterEQ.gui.onSelect('x_flat');
+~syn_buf_mozart = Synth.new(\play_buffer, [\bufnum, ~buf_mozart, \amp, 0.5]);
 ~syn_buf_mozart.set(\amp, 0.9);
 ~syn_buf_mozart.release(0.3);
 
@@ -420,7 +428,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 // "사리야" : "사리야 예술가의 속성 알려줘." 끝나면 0.5초 쉬고 go
-~syn_buf_sari = Synth.new(\play_buffer, [\bufnum, ~buf_sari, \amp, 0.45]);
+~syn_buf_sari = Synth.new(\play_buffer, [\bufnum, ~buf_sari, \amp, 0.4]);
 ~syn_buf_sari.set(\amp, 0.2);
 ~syn_buf_sari.release(0.3);
 
@@ -433,7 +441,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 // 베토벤 음악 : 사리야 끝나고 모두 퇴장했다가 다시 들어와서 (정아-태이-세번째 쉿-네번째 쉿-다선번째 쉿)'쉿' 소리 5번 듣고 go
-~syn_buf_beethoven = Synth.new(\play_buffer, [\bufnum, ~buf_beethoven, \amp, 0.6]);
+~syn_buf_beethoven = Synth.new(\play_buffer, [\bufnum, ~buf_beethoven, \amp, 0.5]);
 ~syn_buf_beethoven.set(\amp, 0.4);
 ~syn_buf_beethoven.release(5.0);
 
@@ -448,7 +456,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 // "모던이다"
 (
 ~mic.free;
-
+~masterEQ.gui.onSelect('mod');
 //change tempo
 TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 ~fadeOutTime_mod = 6.0;
@@ -697,8 +705,9 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~mic1.set(\amp, 0.8);
 ~mic1.free;
 
+~masterEQ.gui.onSelect('x_flat');
 // ======== 홈쇼핑 : 암전에서(하우스가 꺼지면) 시작 먼저, 마이크 on ========
-~syn_buf_shopping = Synth.new(\play_buffer, [\bufnum, ~buf_shopping, \amp, 0.5]);
+~syn_buf_shopping = Synth.new(\play_buffer, [\bufnum, ~buf_shopping, \amp, 0.4]);
 ~mic1 = Synth(\micin, [\amp, 1.0, \in, 1]);
 ~mic1.set(\amp, 0.9);
 ~syn_buf_shopping.set(\amp, 0.1); // 소리 줄어듬
@@ -715,7 +724,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 // 중간에 민 씨 멘트 있음
 // 한대수 : 민하씨가 태이씨한테 벽돌을 뺏어서 바닥에 찍을 때, 중간에 민씨 멘트할 때, 작아졌다 커진다. 두 사람 함께 나갈때 페이드 아웃
-~syn_buf_handaesoo = Synth.new(\play_buffer, [\bufnum, ~buf_handaesoo, \amp, 0.6]);
+~syn_buf_handaesoo = Synth.new(\play_buffer, [\bufnum, ~buf_handaesoo, \amp, 0.5]);
 ~syn_buf_handaesoo.set(\amp, 0.2);
 ~syn_buf_handaesoo.set(\amp, 0.5);
 ~syn_buf_handaesoo.release(4.0);
@@ -730,8 +739,8 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 // 여자의 정원 : 세 분 모여서 민씨 뒷모습 보이고 살랑살랑 3번 하고 나면 go
 ~mic1.free;
 ~mic1 = Synth(\micin, [\amp, 1.0, \in, 1]);// 중간에 민씨 멘트
-~syn_buf_cello = Synth.new(\play_buffer, [\bufnum, ~buf_cello, \amp, 0.8]);~mic1.free;
-~syn_buf_cello.set(\amp, 0.8);
+~syn_buf_cello = Synth.new(\play_buffer, [\bufnum, ~buf_cello, \amp, 0.6]);~mic1.free;
+~syn_buf_cello.set(\amp, 0.7);
 ~syn_buf_cello.set(\amp, 0.2);
 ~syn_buf_cello.release(8.0);
 
@@ -748,7 +757,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 (// 개념 무용 : 실행만 - 소리는 안남
 var ampMul = 0;
 
-
+TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 ~key_con_add = 0;
 ~fadeOutTime_con = 4.0;
 
@@ -782,7 +791,7 @@ var ampMul = 0;
 (// 개념 무용 동작은 무 들고 뛰어 다니기 : fade in
 
 var ampMul = 0.5;
-
+~masterEQ.gui.onSelect('concept_dance');
 // 민씨 움직이며 멘트
 // ~mic1 = Synth(\micin, [\amp, 0.8]);
 
@@ -842,6 +851,7 @@ var ampMul = 0.5;
 // 태이씨 동작에 맞춰야 함 : 2 * 8 듣고 go - 중간엔 비트만 나온다든지 하는 변형이 필요하다 - 태이씨 덩실덩실 다음 앞으로 손 내리칠 때 go
 // 무용수들 나갈때 으러렁과 다음 홈쇼핑 음악 오버랩
 (
+~masterEQ.gui.onSelect('bts');
 a.free;
 a = Synth(\play_buffer_m, [\bufnum, ~buf_bts, \amp, 0.4, \out, 100]);
 // a = Synth(\play_buffer_m, [\bufnum, ~buf_bts, \amp, 0.2, \out, 0]);
@@ -856,20 +866,10 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 		\freq, 20000,
 		\ping_amp, 0.30,
 		\ping_freq, 700,
-		// \fm_freq, Pseq([90, 100, 10, 40]/10, inf),
 		\fm_freq, Pseq([2300, 2600, 3000, 4000]*2, inf),
 		\fm_amp, 0.8,
-		// \addamp, 0.0,
-		\addamp, 0.9,
-
-		// \freq, Pseq([20, 100, 100, 10, 20, 30, 60, 120]*60, inf),
-		// \freq, Pseq([2000, 100, 3000, 600], inf),
-		// \freq, 100,
-		// \addamp, Pseq([1, 1.0], inf),
-		// \rq, 1,
-        \amp, 0.9,
-		// \freq_tri, Pseq([10, 2, 1, 20, 100, 1000, 10000], inf),
-		// \amp_tri, 1,
+		\addamp, 0.6,
+        \amp, 0.7,
 		\atktime, 0.1,
 		\sustime, 0.9,
 		\reltime, 0.1,
@@ -893,20 +893,10 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 		\freq, 20000,
 		\ping_amp, 0.30,
 		\ping_freq, 700,
-		// \fm_freq, Pseq([90, 100, 10, 40]/10, inf),
 		\fm_freq, Pseq([2300, 2600, 3000, 4000]*2, inf),
 		\fm_amp, 0.8,
-		// \addamp, 0.0,
-		\addamp, 0.9,
-
-		// \freq, Pseq([20, 100, 100, 10, 20, 30, 60, 120]*60, inf),
-		// \freq, Pseq([2000, 100, 3000, 600], inf),
-		// \freq, 100,
-		// \addamp, Pseq([1, 1.0], inf),
-		// \rq, 1,
-        \amp, 0.5,
-		// \freq_tri, Pseq([10, 2, 1, 20, 100, 1000, 10000], inf),
-		// \amp_tri, 1,
+		\addamp, 0.5,
+        \amp, 0.3,
 		\atktime, 0.1,
 		\sustime, 0.9,
 		\reltime, 0.1,
@@ -928,26 +918,14 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 		\freq, 20000,
 		\ping_amp, 0.30,
 		\ping_freq, 700,
-		// \fm_freq, Pseq([90, 100, 10, 40]/10, inf),
 		\fm_freq, Pseq([2300, 2600, 3000, 4000]*2, inf),
 		\fm_amp, 0.8,
-		// \addamp, 0.0,
-		\addamp, 0.9,
-
-		// \freq, Pseq([20, 100, 100, 10, 20, 30, 60, 120]*60, inf),
-		// \freq, Pseq([2000, 100, 3000, 600], inf),
-		// \freq, 100,
-		// \addamp, Pseq([1, 1.0], inf),
-		// \rq, 1,
-        \amp, 0.9,
-		// \freq_tri, Pseq([10, 2, 1, 20, 100, 1000, 10000], inf),
-		// \amp_tri, 1,
+		\addamp, 0.6,
+        \amp, 0.7,
 		\atktime, 0.1,
 		\sustime, 0.9,
 		\reltime, 0.1,
 		\addAction, 1
-
-
 	)
 ).quant_(0).play;
 ~ululung_fil.fadeTime = 3.0;
@@ -956,9 +934,10 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 
 (// "저는 이작품 놓치지 않을건데요". 으르렁에서 홈쇼핑 음악으로 오버랩
 // 아래 세 줄 순차 실행
+~masterEQ.gui.onSelect('x_flat');
 ~syn_buf_shopping = Synth.new(\play_buffer, [\bufnum, ~buf_shopping, \start, s.sampleRate * 40, \amp, 0.0]);
 ~ululung_fil = Pdef(\seq_fff, Pbind(\amp, 0)).play;
-~syn_buf_shopping.set(\amp, 0.1); // fade out
+~syn_buf_shopping.set(\amp, 0.15); // fade out
 
 // 마지막 작품 같이 보시면서...
 ~syn_buf_shopping.release(4.0);
@@ -1014,12 +993,14 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 ~fadeOutTime_game = 4.0;
 
 
-~amp_game = 0.6;
-~amp_game_b = ~amp_game*0.25;
-~amp_game_c = ~amp_game*~amp_game_b - 0.05;
-~amp_game_a = ~amp_game*~amp_game_b - 0.15;
+~amp_game = 0.33;
+~amp_game_a = ~amp_game*0.2;
+~amp_game_b = ~amp_game*0.15;
+~amp_game_c = ~amp_game*0.2;
 // ~amp_game_a = ~amp_game_b = ~amp_game_c = 0;
 
+
+// melody fast
 ~g1 = Pdef(\seq_game_1,
 	Pbind(
 		\instrument, \gobeat,
@@ -1049,6 +1030,7 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 ).quant_(0);
 // ~g1.fadeTime = ~fadeOutTime_game;
 
+// bass
 ~g2 = Pdef(\seq_game_2,
 	Pbind(
 		\instrument, \gobeat,
@@ -1079,6 +1061,7 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 ~g2.fadeTime = ~fadeOutTime_game;
 
 
+// melody slow
 ~g3 = Pdef(\seq_game_3,
 	Pbind(
 		\instrument, \gobeat,
@@ -1574,12 +1557,10 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 )
 
-(// 게임 음악 다시 go
-~music_B_1.stop;~music_B_2.stop;~music_B_3.stop;
-~mic1.free;
-// 민하씨 마이크 on
-// ~mic1 = Synth(\micin, [\amp, 1.0]);
+(// game 음악 다시 go
 ~masterEQ.gui.onSelect('game');
+~mic.free; // 정아씨 마이크 off
+// ~mic1 = Synth(\micin, [\amp, 1.0, \in, 1]); // 민하씨 마이크 on
 
 // game bgm
 TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
@@ -1591,10 +1572,128 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 ~fadeOutTime_game = 4.0;
 
 
-~amp_game = 0.6;
-~amp_game_b = ~amp_game*0.25;
-~amp_game_c = ~amp_game*~amp_game_b - 0.05;
-~amp_game_a = ~amp_game*~amp_game_b - 0.15;
+~amp_game = 0.33;
+~amp_game_a = ~amp_game*0.2;
+~amp_game_b = ~amp_game*0.15;
+~amp_game_c = ~amp_game*0.2;
+// ~amp_game_a = ~amp_game_b = ~amp_game_c = 0;
+
+
+// melody fast
+~g1 = Pdef(\seq_game_1,
+	Pbind(
+		\instrument, \gobeat,
+		// \instrument, \lfp,
+		// \instrument, "help-TCoin",
+		\dur, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]*0.7, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([59, 64, 63, 66, 59, 64, 63, 59]+~key).midicps, 1),
+			Pseq([Rest(1/~div)], 8),
+			Pseq(([59, 64, 63, 66, 59, 64, 63, 59]-2+~key).midicps, 1),
+			Pseq([Rest(1/~div)], 8),
+			// Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd).midicps, 1),
+		], inf),
+		\delta, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div, 1),
+			Pseq([Rest(1/~div)], 8),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+			], inf),
+		\amp, ~amp_game_a,
+
+	)
+// ).quant_(4).play;
+).quant_(0);
+// ~g1.fadeTime = ~fadeOutTime_game;
+
+// bass
+~g2 = Pdef(\seq_game_2,
+	Pbind(
+		\instrument, \gobeat,
+		\dur, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1], 2),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5], 1),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1], 1),
+		], inf),
+		\freq, Pseq([
+			// Pseq(([63]+~key2).midicps, 8),
+			// Pseq(([63]-2+~key2).midicps, 8),
+			Pseq(([63, 63, 63, 63, 63, 63, 63, 65]+~key2).midicps, 1),
+			Pseq(([63]-2+~key2).midicps, 8),
+			Pseq(([63, 63, 63, 63, 63, 63, 63, 59, 60]+~key2).midicps, 1),
+			Pseq(([63]-2+~key2).midicps, 8),
+
+		], inf),
+		\delta, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div2, 2),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5]/~div2, 1),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div2, 1),
+			], inf),
+		\amp, ~amp_game_b,
+
+	)
+// ).quant_(4).play;
+).quant_(0);
+~g2.fadeTime = ~fadeOutTime_game;
+
+
+// melody slow
+~g3 = Pdef(\seq_game_3,
+	Pbind(
+		\instrument, \gobeat,
+		// \instrument, "help-TCoin",
+		\dur, Pseq([
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 1], 1),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1, 1, 0.8, 1.2], 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5], 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 1], 1),
+		], inf),
+		\freq, Pseq([
+			// Pseq(([63]+~key2).midicps, 8),
+			// Pseq(([63]-2+~key2).midicps, 8),
+			Pseq(([60, 60, 58, 60, 62, 58, 58, 56, 58, 55, 58]+~key3).midicps, 1),
+			// Pseq(([60, 60, 58, 60, 62, 58, 58, 56, 58, 58]+~key3).midicps, 1),
+			// Pseq(([63]-2+~key2).midicps, 8),
+			// Pseq(([63, 63, 63, 63, 63, 63, 63, 59, 60]+~key3).midicps, 1),
+			// Pseq(([63]-2+~key2).midicps, 8),
+
+		], inf),
+		\delta, Pseq([
+			// Pseq([2, 1, 0.5, 3.5, 1, 2, 1, 0.5, 3.5, 1]/~div2, 1),
+			Pseq([2, 1, 0.5, 3.5, 1, 2, 1, 0.5, 2.5, 1, 1]/~div2, 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5]/~div2, 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div2, 1),
+			], inf),
+		\amp, ~amp_game_c,
+
+	)
+// ).quant_(4).play;
+	).quant_(0);
+~g3.fadeTime = ~fadeOutTime_game;
+
+~g1.play;~g2.play;~g3.play;
+
+)
+
+
+(// game bgm fade out
+
+TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
+~div = 4;
+~div2 = ~div/2;
+~key = -4;
+~key2 = ~key - 16;
+~key3 = ~key - 1 + 12;
+~fadeOutTime_game = 2.0;
+
+
+~amp_game = 0;
+~amp_game_b = 0;
+~amp_game_c = 0;
+~amp_game_a = 0;
 // ~amp_game_a = ~amp_game_b = ~amp_game_c = 0;
 
 ~g1 = Pdef(\seq_game_1,
@@ -1692,8 +1791,6 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 ~g1.play;~g2.play;~g3.play;
 
 )
-
-
 
 
 
