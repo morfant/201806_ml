@@ -12,9 +12,11 @@
 - 하우스 음악 : 정적만 아니게 들릴 듯 말 듯?
 - 전체 음량 맞추기
 - 커튼콜 음악 등 디테일 수정
-
 - eq 처리
 - 큐, 마이크 온 오프 정
+
+- 마이크 on/off 확인
+
 
 
 
@@ -22,9 +24,13 @@
 TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 
 
+// eq global var 설정
+~masterEQ = ChannelEQ.new(2, s, 0, 0);
+
+
 // ======================================= Sequence ===========================================
 
-
+~masterEQ.gui.onSelect('x_flat');
 // 인트로 사운드 : 무용수 세 명 나와서 자리 잡으면 go
 ~syn_buf_intro = Synth.new(\play_buffer, [\bufnum, ~buf_intro, \amp, 0.8]);
 ~syn_buf_intro.set(\amp, 0.8);
@@ -255,7 +261,10 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 // 태이씨 나레이션 끝나면 중세 음악이 살짝 다시 들어온다. (fade in 처리!!)
 (
 ~m1.stop;~m2.stop;~m3.stop;~m4.stop;
-~mic = Synth(\micin, [\amp, 1.0]);
+
+// mic
+// ~mic = Synth(\micin, [\amp, 1.0]);
+
 // 어떤 경우 박자가 맞지 않는다!!!!!!
 ~p1.stop;
 ~p2.stop;
@@ -554,7 +563,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 
 
-(// 민씨 의자 가지고 나올 때 : 천천히! // 피아노 소리 fade in, 조금 작게
+(// 민씨 의자 가지고 나올 때 천천히! // 피아노 소리 fade in, 조금 작게 (극장에서 볼륨 체크 할 것)
 // t.free;
 ~c3.stop;
 ~keyaaa = -3;
@@ -589,7 +598,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 )
 
 
-(// 피아노 소리 fade out: 천천히!
+(// 피아노 소리 fade out: 민씨 의자 들고 나가기 시작하면 천천히!
 ~keyaaa = -3;
 // base rytm
 ~c4 = Pdef(\seq_mod_4,
@@ -622,12 +631,44 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 )
 
 // 파도소리 인터뷰 추가 : 태이씨가 사다리 가지고 들어와서 자리 잡으면 go
-~syn_buf_outtro_wave = Synth.new(\play_buffer, [\bufnum, ~buf_outtro_wave, \amp, 2.0]);
+~c4.stop;~syn_buf_outtro_wave = Synth.new(\play_buffer, [\bufnum, ~buf_outtro_wave, \amp, 1.8]);
 ~syn_buf_outtro_wave.set(\amp, 1.7);
 ~syn_buf_outtro_wave.release(0.3);
 
-// 다시 피아노 fade in
-~c4.stop;
+
+(// 다시 피아노 fade in (극장에서 볼륨 체크 할 것)
+~c3.stop;
+~keyaaa = -3;
+// base rytm
+~c4 = Pdef(\seq_mod_4,
+	Pbind(
+		// \instrument, \sori,
+		// \instrument, \gobeat,
+		\instrument, "help-TCoin",
+		\dur, Pseq([
+			Pseq([1, 1/2, 1*3/2, 1, 1], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([65, 68, 59, #[71, 68], #[69, 66]]+~keyaaa).midicps, 1),
+			Pseq(([65, 68, 59, #[71, 68], #[69, 66]]+~keyaaa-2).midicps, 1),
+			Pseq(([65, 68, 59, #[71, 66], #[69, 66]]+~keyaaa+5).midicps, 1),
+			// Pseq(([65, 68, 59, #[71, 66], #[69, 66]]+~keyaaa-3).midicps, 1),
+		], inf),
+		// \freq4, Pseq(([~freq4]).midicps, inf),
+		\delta, Pseq([
+			Pseq([1/32, 1, 1, 1, 1]/1, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+		], inf),
+		\amp, Pseq([0.2, 0.4, 0.4, 0.4, 0.32]/5, inf),
+		// \amp, 0.5
+
+	)
+// ).quant_(4).play;
+).quant_(0).play;
+~c4.fadeTime = ~fadeOutTime_mod;
+)
+
 
 // 인터미션 안내에도 마이크?
 ~mic = Synth(\micin, [\amp, 1.0]); // 피아노 소리 올리고 마이크를 켜면 소리가 다르다? 왜??
@@ -743,7 +784,7 @@ var ampMul = 0;
 var ampMul = 0.5;
 
 // 민씨 움직이며 멘트
-~mic1 = Synth(\micin, [\amp, 0.8]);
+// ~mic1 = Synth(\micin, [\amp, 0.8]);
 
 
 ~key_con_add = 0;
@@ -863,7 +904,7 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 		// \freq, 100,
 		// \addamp, Pseq([1, 1.0], inf),
 		// \rq, 1,
-        \amp, 0.4,
+        \amp, 0.5,
 		// \freq_tri, Pseq([10, 2, 1, 20, 100, 1000, 10000], inf),
 		// \amp_tri, 1,
 		\atktime, 0.1,
@@ -917,7 +958,6 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 // 아래 세 줄 순차 실행
 ~syn_buf_shopping = Synth.new(\play_buffer, [\bufnum, ~buf_shopping, \start, s.sampleRate * 40, \amp, 0.0]);
 ~ululung_fil = Pdef(\seq_fff, Pbind(\amp, 0)).play;
-~syn_buf_shopping.set(\amp, 0.4); // fade in
 ~syn_buf_shopping.set(\amp, 0.1); // fade out
 
 // 마지막 작품 같이 보시면서...
@@ -958,13 +998,11 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 ~mic = Synth(\micin, [\amp, 1.0]);
 
 
-
-//---------------- 게임 씬 ----------------
-// 예술작품을 평가하는 것이 과연 가능한 것인지... 다음에 음악 go
-// 베이스 좀 약하게
-(// 혜림씨가 세숫대야 겹치면 끝나면 음악 먼저
+/*----------------------- 메이져 게임 씬 -----------------------*/
+(// 혜림씨 세숫대야 씬 끝내면서 세숫대야 두개를 겹칠때 go
+~masterEQ.gui.onSelect('game');
 ~mic.free; // 정아씨 마이크 off
-~mic1 = Synth(\micin, [\amp, 1.0, \in, 1]); // 민하씨 마이크 on
+// ~mic1 = Synth(\micin, [\amp, 1.0, \in, 1]); // 민하씨 마이크 on
 
 // game bgm
 TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
@@ -1197,9 +1235,463 @@ TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.
 )
 
 
-// 두번째 라운드 사운드 대결 준비 해야 함.
+/*----------------------- 사운드 대결 -----------------------*/
+(//music A - start!!!
+var music_A_fadeTime = 3.0;
+~masterEQ.gui.onSelect('x_flat');
+~g1.stop;~g2.stop;~g3.stop;
+TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
+~amp_music_a = 3.5;
+~music_A = Pdef(\seq_music_a,
+	Pbind(
+		\instrument, \woong,
+		\dur, Pseq([
+			Pseq([1, 1, 1, 1]/16, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([108, 105, 105, 105]).midicps, 1),
+			// Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd).midicps, 1),
+		], inf),
+		\freq2, Pseq([
+						Pseq(([108, 105, 105, 105]).midicps, 1),
+		// 	Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 44, 44]+~freqAdd2).midicps, 1),
+		// 	Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd2).midicps, 1),
+			], inf),
+		\freq3, Pseq([
+						Pseq(([108, 105, 105, 105]).midicps, 1),
+		// 	Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 44, 44]+~freqAdd3).midicps, 1),
+		// 	Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd3).midicps, 1),
+			], inf),
+		// \freq4, Pseq(([~freq4]).midicps, inf),
+		\delta, Pseq([
+			Pseq([1, 1, 1, 1]/9, 1), // original
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25]/9, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1]/9, 1),
+			], inf),
+		// \sn, Pseq((80..8), 1),
+		// \sn, 1,
+		\sn, 8,
+		// \sn, Pseq([8, 100, 8, 8, 800, Prand([500, 300, 2], 1), 8, 8], inf),
+		\amp, 0.9*~amp_music_a,
+		// \cutoff, 400,
+		\cutoff, Pseq([100, 200, 400, 600, 500, 200, 1800, 200]/4, inf),
+		// \cutoff, Pseq([100, 200, 400, 200, 500, 200, 500, 500], inf),
+		\rq, 0.9
+
+	)
+// ).quant_(4).play;
+	).quant_(0).play;
+~music_A.fadeTime = music_A_fadeTime;
+
+)
+
+(//music A - fadeOut
+var music_A_fadeTime = 3.0;
+TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
+~amp_music_a = 0;
+~music_A = Pdef(\seq_music_a,
+	Pbind(
+		\instrument, \woong,
+		\dur, Pseq([
+			Pseq([1, 1, 1, 1]/16, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([108, 105, 105, 105]).midicps, 1),
+			// Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd).midicps, 1),
+		], inf),
+		\freq2, Pseq([
+						Pseq(([108, 105, 105, 105]).midicps, 1),
+		// 	Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 44, 44]+~freqAdd2).midicps, 1),
+		// 	Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd2).midicps, 1),
+			], inf),
+		\freq3, Pseq([
+						Pseq(([108, 105, 105, 105]).midicps, 1),
+		// 	Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 44, 44]+~freqAdd3).midicps, 1),
+		// 	Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd3).midicps, 1),
+			], inf),
+		// \freq4, Pseq(([~freq4]).midicps, inf),
+		\delta, Pseq([
+			Pseq([1, 1, 1, 1]/9, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25]/9, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1]/9, 1),
+			], inf),
+		// \sn, Pseq((80..8), 1),
+		// \sn, 1,
+		\sn, 8,
+		// \sn, Pseq([8, 100, 8, 8, 800, Prand([500, 300, 2], 1), 8, 8], inf),
+		\amp, 0.9*~amp_music_a,
+		// \cutoff, 400,
+		\cutoff, Pseq([100, 200, 400, 600, 500, 200, 1800, 200]/4, inf),
+		// \cutoff, Pseq([100, 200, 400, 200, 500, 200, 500, 500], inf),
+		\rq, 0.9
+
+	)
+// ).quant_(4).play;
+	).quant_(0).play;
+~music_A.fadeTime = music_A_fadeTime;
+
+)
 
 
+
+(//music B start
+
+var music_B_fadeTime = 3.0;
+~music_A.stop;
+TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
+
+~amp_music_b = 1.5;
+
+~music_B_1 = Pdef(\seq_long,
+	Pbind(
+		\instrument, \woonglong,
+		\dur, Pseq([
+			// Pseq([1, 1, 1, 1, 0.5, 0.5]/16, 1),
+			Pseq([1, 1, 1, 1, 1]/16, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([108, 105, 105, 105]-12-12).midicps, 1),
+			// Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd).midicps, 1),
+		], inf),
+		\delta, Pseq([
+						Pseq([1, 1, 1, 1]/4, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+			], inf),
+		\amp, 1.0*~amp_music_b,
+		// \cutoff, 400,
+		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 2000], inf),
+		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 1500], inf),
+		\cutoff, Pseq([
+			// Pseq([100, 200, 400, 900, 500, 200, 1000, 500], 1),
+			// Pseq([100, 200, 400, 900, 500, 200, 1000, 500]/12, 1),
+			Pseq([100, 200, 400, 900, 500, 200, 1000, 500]/6, 1),
+			Pseq([100, 200, 400, 900, 500, 200, 1000, 500]/12, 1),
+		], inf),
+		// \cutoff, 500,
+		\rq, 0.9,
+
+
+	)
+// ).quant_(4).play;
+	).quant_(0).play;
+~music_B_1.fadeTime = music_B_fadeTime;
+
+
+
+~music_B_2 = Pdef(\seq_long2,
+	Pbind(
+		\instrument, \woonglong,
+		\dur, Pseq([
+			Pseq([1, 1, 3]/6, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
+		\delta, Pseq([
+						Pseq([1, 1, 6]/2, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+			], inf),
+		\amp, 0.2/2/2*~amp_music_b,
+		// \amp, 0,
+		// \cutoff, 400,
+		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 2000], inf),
+		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 1500], inf),
+		\cutoff,
+		Pseq([
+			// Pseq([100, 200, 400, 900, 500, 200, 1000, 500], 1),
+			// Pseq([100, 200, 400, 900, 500, 200, 1000, 500]/12, 1),
+			// Pseq([100, 200, 400, 900, 500, 200, 1000, 500]/6, 1),
+			// Pseq([500, 450], 1),
+		// Ppar([
+			// Pseq([500, 420, 350]+240, 1),
+			Pseq([500, 420, 350], 1),
+			// Pseq([500, 450], 1),
+		// ], inf),
+			], inf),
+		// \cutoff, 500,
+		\rq, 0.3,
+
+
+	)
+// ).quant_(4).play;
+	).quant_(0).play;
+~music_B_2.fadeTime = music_B_fadeTime;
+
+
+
+~music_B_3 = Pdef(\seq_long3,
+	Pbind(
+		\instrument, \woonglong,
+		\dur, Pseq([
+			Pseq([1, 1]/4, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
+		\delta, Pseq([
+						Pseq([1, 1], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+			], inf),
+		\amp, 0.03/2*~amp_music_b,
+		// \cutoff, 400,
+		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 2000], inf),
+		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 1500], inf),
+		\cutoff,
+		Pseq([
+			Pseq([100, 50]*30, 1),
+		], inf),
+		// \cutoff, 500,
+		\rq, 1.0,
+
+
+	)
+// ).quant_(4).play;
+	).quant_(0).play;
+~music_B_3.fadeTime = music_B_fadeTime;
+
+
+
+)
+
+
+
+(// music B fade out
+var music_B_fadeTime = 3.0;
+TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
+
+~amp_music_b = 0;
+
+~music_B_1 = Pdef(\seq_long,
+	Pbind(
+		\instrument, \woonglong,
+		\dur, Pseq([
+			// Pseq([1, 1, 1, 1, 0.5, 0.5]/16, 1),
+			Pseq([1, 1, 1, 1, 1]/16, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([108, 105, 105, 105]-12-12).midicps, 1),
+			// Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd).midicps, 1),
+		], inf),
+		\delta, Pseq([
+						Pseq([1, 1, 1, 1]/4, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+			], inf),
+		\amp, 1.0*~amp_music_b,
+		// \cutoff, 400,
+		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 2000], inf),
+		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 1500], inf),
+		\cutoff, Pseq([
+			// Pseq([100, 200, 400, 900, 500, 200, 1000, 500], 1),
+			// Pseq([100, 200, 400, 900, 500, 200, 1000, 500]/12, 1),
+			Pseq([100, 200, 400, 900, 500, 200, 1000, 500]/6, 1),
+			Pseq([100, 200, 400, 900, 500, 200, 1000, 500]/12, 1),
+		], inf),
+		// \cutoff, 500,
+		\rq, 0.9,
+
+
+	)
+// ).quant_(4).play;
+	).quant_(0).play;
+~music_B_1.fadeTime = music_B_fadeTime;
+
+
+
+~music_B_2 = Pdef(\seq_long2,
+	Pbind(
+		\instrument, \woonglong,
+		\dur, Pseq([
+			Pseq([1, 1, 3]/6, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
+		\delta, Pseq([
+						Pseq([1, 1, 6]/2, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+			], inf),
+		\amp, 0.2/2/2*~amp_music_b,
+		// \amp, 0,
+		// \cutoff, 400,
+		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 2000], inf),
+		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 1500], inf),
+		\cutoff,
+		Pseq([
+			// Pseq([100, 200, 400, 900, 500, 200, 1000, 500], 1),
+			// Pseq([100, 200, 400, 900, 500, 200, 1000, 500]/12, 1),
+			// Pseq([100, 200, 400, 900, 500, 200, 1000, 500]/6, 1),
+			// Pseq([500, 450], 1),
+		// Ppar([
+			// Pseq([500, 420, 350]+240, 1),
+			Pseq([500, 420, 350], 1),
+			// Pseq([500, 450], 1),
+		// ], inf),
+			], inf),
+		// \cutoff, 500,
+		\rq, 0.3,
+
+
+	)
+// ).quant_(4).play;
+	).quant_(0).play;
+~music_B_2.fadeTime = music_B_fadeTime;
+
+
+
+~music_B_3 = Pdef(\seq_long3,
+	Pbind(
+		\instrument, \woonglong,
+		\dur, Pseq([
+			Pseq([1, 1]/4, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
+		\delta, Pseq([
+						Pseq([1, 1], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+			], inf),
+		\amp, 0.03/2*~amp_music_b,
+		// \cutoff, 400,
+		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 2000], inf),
+		// \cutoff, Pseq([100, 200, 400, 900, 500, 200, 1000, 1500], inf),
+		\cutoff,
+		Pseq([
+			Pseq([100, 50]*30, 1),
+		], inf),
+		// \cutoff, 500,
+		\rq, 1.0,
+
+
+	)
+// ).quant_(4).play;
+	).quant_(0).play;
+~music_B_3.fadeTime = music_B_fadeTime;
+
+
+
+)
+
+(// 게임 음악 다시 go
+~music_B_1.stop;~music_B_2.stop;~music_B_3.stop;
+~mic1.free;
+// 민하씨 마이크 on
+// ~mic1 = Synth(\micin, [\amp, 1.0]);
+~masterEQ.gui.onSelect('game');
+
+// game bgm
+TempoClock.default.tempo_(60/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
+~div = 4;
+~div2 = ~div/2;
+~key = -4;
+~key2 = ~key - 16;
+~key3 = ~key - 1 + 12;
+~fadeOutTime_game = 4.0;
+
+
+~amp_game = 0.6;
+~amp_game_b = ~amp_game*0.25;
+~amp_game_c = ~amp_game*~amp_game_b - 0.05;
+~amp_game_a = ~amp_game*~amp_game_b - 0.15;
+// ~amp_game_a = ~amp_game_b = ~amp_game_c = 0;
+
+~g1 = Pdef(\seq_game_1,
+	Pbind(
+		\instrument, \gobeat,
+		// \instrument, \lfp,
+		// \instrument, "help-TCoin",
+		\dur, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]*0.7, 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
+		], inf),
+		\freq, Pseq([
+			Pseq(([59, 64, 63, 66, 59, 64, 63, 59]+~key).midicps, 1),
+			Pseq([Rest(1/~div)], 8),
+			Pseq(([59, 64, 63, 66, 59, 64, 63, 59]-2+~key).midicps, 1),
+			Pseq([Rest(1/~div)], 8),
+			// Pseq(([49, 56, 49, 56, 49, 44, 44, 49, 49]+~freqAdd).midicps, 1),
+		], inf),
+		\delta, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div, 1),
+			Pseq([Rest(1/~div)], 8),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
+			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
+			], inf),
+		\amp, ~amp_game_a,
+
+	)
+// ).quant_(4).play;
+).quant_(0);
+// ~g1.fadeTime = ~fadeOutTime_game;
+
+~g2 = Pdef(\seq_game_2,
+	Pbind(
+		\instrument, \gobeat,
+		\dur, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1], 2),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5], 1),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1], 1),
+		], inf),
+		\freq, Pseq([
+			// Pseq(([63]+~key2).midicps, 8),
+			// Pseq(([63]-2+~key2).midicps, 8),
+			Pseq(([63, 63, 63, 63, 63, 63, 63, 65]+~key2).midicps, 1),
+			Pseq(([63]-2+~key2).midicps, 8),
+			Pseq(([63, 63, 63, 63, 63, 63, 63, 59, 60]+~key2).midicps, 1),
+			Pseq(([63]-2+~key2).midicps, 8),
+
+		], inf),
+		\delta, Pseq([
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div2, 2),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5]/~div2, 1),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div2, 1),
+			], inf),
+		\amp, ~amp_game_b,
+
+	)
+// ).quant_(4).play;
+).quant_(0);
+~g2.fadeTime = ~fadeOutTime_game;
+
+
+~g3 = Pdef(\seq_game_3,
+	Pbind(
+		\instrument, \gobeat,
+		// \instrument, "help-TCoin",
+		\dur, Pseq([
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 1], 1),
+			Pseq([1, 1, 1, 1, 1, 1, 1, 1, 1, 0.8, 1.2], 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5], 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 1], 1),
+		], inf),
+		\freq, Pseq([
+			// Pseq(([63]+~key2).midicps, 8),
+			// Pseq(([63]-2+~key2).midicps, 8),
+			Pseq(([60, 60, 58, 60, 62, 58, 58, 56, 58, 55, 58]+~key3).midicps, 1),
+			// Pseq(([60, 60, 58, 60, 62, 58, 58, 56, 58, 58]+~key3).midicps, 1),
+			// Pseq(([63]-2+~key2).midicps, 8),
+			// Pseq(([63, 63, 63, 63, 63, 63, 63, 59, 60]+~key3).midicps, 1),
+			// Pseq(([63]-2+~key2).midicps, 8),
+
+		], inf),
+		\delta, Pseq([
+			// Pseq([2, 1, 0.5, 3.5, 1, 2, 1, 0.5, 3.5, 1]/~div2, 1),
+			Pseq([2, 1, 0.5, 3.5, 1, 2, 1, 0.5, 2.5, 1, 1]/~div2, 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 0.5, 0.5]/~div2, 1),
+			// Pseq([1, 1, 1, 1, 1, 1, 1, 1]/~div2, 1),
+			], inf),
+		\amp, ~amp_game_c,
+
+	)
+// ).quant_(4).play;
+	).quant_(0);
+~g3.fadeTime = ~fadeOutTime_game;
+
+~g1.play;~g2.play;~g3.play;
+
+)
 
 
 
