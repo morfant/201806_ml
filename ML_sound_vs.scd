@@ -3,7 +3,9 @@
 // 솔로 즉흥 끝나고 암전되면 커튼콜 음악
 
 (//music A - start!!!
+
 var music_A_fadeTime = 3.0;
+~masterEQ.gui.onSelect('x_flat');
 ~g1.stop;~g2.stop;~g3.stop;
 TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 ~amp_music_a = 3.5;
@@ -105,6 +107,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 //music B start
 (
 var music_B_fadeTime = 3.0;
+~masterEQ.gui.onSelect('x_flat');
 TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 
 ~amp_music_b = 1.5;
@@ -156,7 +159,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
 		], inf),
 		\delta, Pseq([
-						Pseq([1, 1, 6]/~music_b_delta_div*2, 1),
+			Pseq([1, 1, 6]/(~music_b_delta_div/2), 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
 			], inf),
@@ -196,7 +199,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
 		], inf),
 		\delta, Pseq([
-						Pseq([1, 1]/~music_b_delta_div/4, 1),
+			Pseq([1, 1]/(~music_b_delta_div/4), 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25], 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1], 1),
 			], inf),
