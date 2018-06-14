@@ -1,7 +1,3 @@
-// 무용수가 완전히 준비가 되면 눈빛 교환 후 튼다
-// 음악 틀고 3분 시간 잰다. 끝나기 30초 전을 알리는 사인 필요.
-// 솔로 즉흥 끝나고 암전되면 커튼콜 음악
-
 /*    AAAAAAAAAAAAAAAAAAAAAAAAAAAAA     */
 
 (//music A - start!!!
@@ -14,7 +10,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 	Pbind(
 		\instrument, \woong,
 		\dur, Pseq([
-			Pseq([1, 1, 1, 1, 2, 2, 2, 2]/16, 1),
+			Pseq([1, 1, 1, 1]/16, 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 0.75, 1], 1),
 		], inf),
 		\freq, Pseq([
@@ -33,7 +29,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 			], inf),
 		// \freq4, Pseq(([~freq4]).midicps, inf),
 		\delta, Pseq([
-			Pseq([1, 1, 1, 1]/4, 1), // original
+			Pseq([1, 1, 1, 1]/9, 1), // original
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 0.75, 0.25]/9, 1),
 			// Pseq([1, 1, 1, 1, 1, 0.75, 0.25, 1, 1]/9, 1),
 			], inf),
@@ -49,12 +45,10 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 	)
 // ).quant_(4).play;
-	).quant_(0); // 처음 실행시에는 play를 넣고 변형 할때는 play가 필요 없다.
+	).quant_(0).play;
 ~music_A.fadeTime = music_A_fadeTime;
 
 )
-
-
 
 (//music A - fadeOut
 var music_A_fadeTime = 10.0;
@@ -100,12 +94,10 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 	)
 // ).quant_(4).play;
-	).quant_(0);
+	).quant_(0).play;
 ~music_A.fadeTime = music_A_fadeTime;
 
 )
-
-
 
 
 
@@ -113,15 +105,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 (//music B start
 
 var music_B_fadeTime = 10.0;
-
-
-
 ~music_A.stop;
-
-~music_B_1.play;
-~music_B_2.play;
-~music_B_3.play;
-
 ~masterEQ.gui.onSelect('music_b');
 TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
 
@@ -160,7 +144,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 	)
 // ).quant_(4).play;
-	).quant_(0);
+	).quant_(0).play;
 ~music_B_1.fadeTime = music_B_fadeTime;
 
 
@@ -200,7 +184,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 	)
 // ).quant_(4).play;
-	).quant_(0);
+	).quant_(0).play;
 ~music_B_2.fadeTime = music_B_fadeTime;
 
 
@@ -231,7 +215,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 	)
 // ).quant_(4).play;
-	).quant_(0);
+	).quant_(0).play;
 ~music_B_3.fadeTime = music_B_fadeTime;
 
 
@@ -278,7 +262,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 	)
 // ).quant_(4).play;
-	).quant_(0);
+	).quant_(0).play;
 ~music_B_1.fadeTime = music_B_fadeTime;
 
 
@@ -318,7 +302,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 	)
 // ).quant_(4).play;
-	).quant_(0);
+	).quant_(0).play;
 ~music_B_2.fadeTime = music_B_fadeTime;
 
 
@@ -349,7 +333,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 
 	)
 // ).quant_(4).play;
-	).quant_(0);
+	).quant_(0).play;
 ~music_B_3.fadeTime = music_B_fadeTime;
 
 

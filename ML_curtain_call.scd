@@ -7,6 +7,8 @@
 ~mic.set(\amp, 0.8);
 ~mic.free;
 
+//솔로 끝나고 암전 완성되면 go
+// 태이씨 얘기할 때 볼륨 낮추기
 (// 중세 음들을 고대 소리로
 ~masterEQ.gui.onSelect('curtain');
 TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.0.wait의 길이를 달라지게 한다.
@@ -15,7 +17,7 @@ TempoClock.default.tempo_(55/60); // 기본 시계라고 생각하면 된다. 1.
 ~fadeOutTime_med = 3.0;
 ~amp_med_a = 0.1/2/~amp_div_;
 ~amp_med_b = 0.8/2/~amp_div_;
-~amp_med_c = 0.2/4/~amp_div_;
+~amp_med_c = 0.2/4/2/~amp_div_;
 ~amp_med_d = 1.0/2/~amp_div_;
 ~curtain_key = 0;
 

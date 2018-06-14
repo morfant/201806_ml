@@ -26,6 +26,10 @@ Buffer.freeAll;
 ~buf_cello = Buffer.read(s, ~path_++"2_3_cello.wav");
 ~buf_bts = Buffer.read(s, ~path_++"2_4_bts.wav");
 
+~buf_anc_rec = Buffer.read(s, ~path_++"anc_rec.wav");
+~buf_med_rec = Buffer.read(s, ~path_++"medieval_rec.wav");
+~buf_bts_rec = Buffer.read(s, ~path_++"bts_rec.wav");
+
 // synthdef
 SynthDef(\play_buffer, { arg t_trig = 0, out = 0, bufnum, gate = 1, susLevel = 0.8, amp = 0.8, start = 0;
     Out.ar( out,
